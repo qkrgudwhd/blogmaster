@@ -16,70 +16,81 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <style>
+    :root {
+      --pd: #3b1f6e;   /* purple-dark */
+      --pm: #6c3eb6;   /* purple-main */
+      --ps: #8b5cf6;   /* purple-soft */
+      --pl: #ede9fe;   /* purple-light */
+      --gb: #f7f5ff;   /* gray-bg */
+      --gd: #d4a43a;   /* gold */
+      --go: #e8950e;   /* gold-orange */
+      --tm: #444444;   /* text-main */
+      --ts: #6b7280;   /* text-sub */
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background: #1e0f3e;
-      color: #ffffff !important;
+      font-family: 'Malgun Gothic', '맑은 고딕', 'Noto Sans KR', sans-serif;
+      background: #ffffff;
+      color: #222222;
       overflow-x: hidden;
+      cursor: auto;
     }
     p, span, h1, h2, h3, h4, h5, h6, label, li { color: inherit; }
 
-    #bg-canvas    { position:fixed; top:0; left:0; z-index:0; pointer-events:none; width:100%; height:100%; }
+    #bg-canvas    { display:none; }
     #cursor-canvas{ position:fixed; top:0; left:0; z-index:9999; pointer-events:none; width:100%; height:100%; }
     #root         { position:relative; z-index:1; }
 
-    /* ── 파랑→보라→오렌지 애니메이션 텍스트 ── */
+    /* ── 보라→금 애니메이션 텍스트 ── */
     .gt { animation:gtcol 5s ease infinite; font-weight:inherit; }
     @keyframes gtcol {
-      0%   { color:#60a5fa; text-shadow:0 0 20px rgba(96,165,250,.9); }
-      25%  { color:#c084fc; text-shadow:0 0 20px rgba(192,132,252,.9); }
-      50%  { color:#fb923c; text-shadow:0 0 20px rgba(251,146,60,.9); }
-      75%  { color:#38bdf8; text-shadow:0 0 20px rgba(56,189,248,.9); }
-      100% { color:#60a5fa; text-shadow:0 0 20px rgba(96,165,250,.9); }
+      0%   { color:#6c3eb6; text-shadow:0 0 16px rgba(108,62,182,.5); }
+      33%  { color:#d4a43a; text-shadow:0 0 16px rgba(212,164,58,.5); }
+      66%  { color:#8b5cf6; text-shadow:0 0 16px rgba(139,92,246,.5); }
+      100% { color:#6c3eb6; text-shadow:0 0 16px rgba(108,62,182,.5); }
     }
     .gt-warm { animation:gtwarm 4s ease infinite; }
     @keyframes gtwarm {
-      0%,100% { color:#fb923c; text-shadow:0 0 16px rgba(251,146,60,.9); }
-      50%     { color:#f97316; text-shadow:0 0 16px rgba(249,115,22,.9); }
+      0%,100% { color:#d4a43a; text-shadow:0 0 12px rgba(212,164,58,.5); }
+      50%     { color:#e8950e; text-shadow:0 0 12px rgba(232,149,14,.5); }
     }
 
-    /* ── 패널 (보라 계열 밝은 다크) ── */
-    .panel  { background:#2d1b5e; border:1px solid rgba(139,92,246,.35); }
-    .pcard  { background:#381f72; border:1px solid rgba(139,92,246,.28); }
-    .pinner { background:#432584; border:1px solid rgba(139,92,246,.22); }
+    /* ── 패널 (라이트 보라 계열) ── */
+    .panel  { background:#f7f5ff; border:1px solid rgba(108,62,182,.12); }
+    .pcard  { background:#ede9fe; border:1px solid rgba(108,62,182,.2);  }
+    .pinner { background:#ffffff; border:1px solid rgba(108,62,182,.14); box-shadow:0 2px 14px rgba(108,62,182,.08); }
 
-    /* ── 네온 테두리 ── */
-    .nc { border-color:rgba(96,165,250,.8)!important;  box-shadow:0 0 24px rgba(96,165,250,.25); }
-    .np { border-color:rgba(192,132,252,.8)!important; box-shadow:0 0 24px rgba(192,132,252,.25); }
-    .ng { border-color:rgba(251,146,60,.8)!important;  box-shadow:0 0 24px rgba(251,146,60,.25); }
-    .ny { border-color:rgba(56,189,248,.8)!important;  box-shadow:0 0 24px rgba(56,189,248,.25); }
-    .nv { border-color:rgba(249,115,22,.8)!important;  box-shadow:0 0 24px rgba(249,115,22,.25); }
-    .no { border-color:rgba(139,92,246,.8)!important;  box-shadow:0 0 24px rgba(139,92,246,.25); }
+    /* ── 테두리 ── */
+    .nc { border-color:rgba(108,62,182,.55)!important; box-shadow:0 0 16px rgba(108,62,182,.15); }
+    .np { border-color:rgba(139,92,246,.55)!important; box-shadow:0 0 16px rgba(139,92,246,.15); }
+    .ng { border-color:rgba(212,164,58,.55)!important;  box-shadow:0 0 16px rgba(212,164,58,.15); }
+    .ny { border-color:rgba(212,164,58,.55)!important;  box-shadow:0 0 16px rgba(212,164,58,.15); }
+    .nv { border-color:rgba(212,164,58,.55)!important;  box-shadow:0 0 16px rgba(212,164,58,.15); }
+    .no { border-color:rgba(108,62,182,.55)!important;  box-shadow:0 0 16px rgba(108,62,182,.15); }
 
-    /* ── 버튼 그라디언트 애니메이션 ── */
+    /* ── 버튼 그라디언트 ── */
     @keyframes gs { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
     /* ── 버튼 ── */
-    .brb  { background:linear-gradient(135deg,#ea580c,#f97316,#fb923c,#fdba74); background-size:300% 300%; animation:gs 4s ease infinite; color:#fff; font-weight:900; border:none; cursor:pointer; transition:transform .15s,box-shadow .15s; box-shadow:0 0 28px rgba(249,115,22,.55); }
-    .brb:hover  { transform:scale(1.05); box-shadow:0 0 44px rgba(249,115,22,.8); }
+    .brb  { background:linear-gradient(135deg,#d4a43a,#e8950e,#f59e0b,#d4a43a); background-size:300% 300%; animation:gs 4s ease infinite; color:#fff; font-weight:900; border:none; cursor:pointer; transition:transform .15s,box-shadow .15s; box-shadow:0 4px 20px rgba(212,164,58,.45); }
+    .brb:hover  { transform:scale(1.05); box-shadow:0 6px 32px rgba(212,164,58,.65); }
     .brb:active { transform:scale(.97); }
-    .bout { border:2px solid rgba(96,165,250,.65); background:rgba(96,165,250,.1); color:#ffffff; font-weight:700; cursor:pointer; transition:all .2s; }
-    .bout:hover { border-color:#60a5fa; color:#60a5fa; box-shadow:0 0 18px rgba(96,165,250,.4); }
-    .bwarm { background:linear-gradient(135deg,#7c3aed,#a855f7,#f97316,#fb923c); background-size:300% 300%; animation:gs 4s ease infinite; color:#fff; font-weight:900; border:none; cursor:pointer; transition:transform .15s,box-shadow .15s; box-shadow:0 0 28px rgba(168,85,247,.5); }
-    .bwarm:hover { transform:scale(1.05); box-shadow:0 0 44px rgba(249,115,22,.7); }
+    .bout { border:2px solid rgba(108,62,182,.6); background:rgba(108,62,182,.06); color:#3b1f6e; font-weight:700; cursor:pointer; transition:all .2s; }
+    .bout:hover { border-color:#6c3eb6; color:#6c3eb6; background:rgba(108,62,182,.1); box-shadow:0 4px 14px rgba(108,62,182,.2); }
+    .bwarm { background:linear-gradient(135deg,#3b1f6e,#6c3eb6,#8b5cf6,#d4a43a); background-size:300% 300%; animation:gs 4s ease infinite; color:#fff; font-weight:900; border:none; cursor:pointer; transition:transform .15s,box-shadow .15s; box-shadow:0 4px 20px rgba(108,62,182,.35); }
+    .bwarm:hover { transform:scale(1.05); box-shadow:0 6px 32px rgba(108,62,182,.5); }
 
-    /* ── 구분선 (파랑→보라→오렌지) ── */
-    .rbl { height:3px; background:linear-gradient(90deg,#3b82f6,#8b5cf6,#a855f7,#f97316,#fb923c,#60a5fa); border-radius:99px; }
+    /* ── 구분선 (보라→금) ── */
+    .rbl { height:3px; background:linear-gradient(90deg,#3b1f6e,#6c3eb6,#8b5cf6,#d4a43a,#6c3eb6); border-radius:99px; }
 
     /* ── 3D 틸트 ── */
     .tilt { transform-style:preserve-3d; transition:transform .12s ease; will-change:transform; }
 
     /* ── 네비 링크 ── */
     .nlink { position:relative; transition:color .2s; text-decoration:none; }
-    .nlink::after { content:''; position:absolute; bottom:-4px; left:0; right:0; height:2px; background:linear-gradient(90deg,#60a5fa,#fb923c); transform:scaleX(0); transform-origin:left; transition:transform .25s; }
-    .nlink:hover { color:#60a5fa!important; }
+    .nlink::after { content:''; position:absolute; bottom:-4px; left:0; right:0; height:2px; background:linear-gradient(90deg,#6c3eb6,#d4a43a); transform:scaleX(0); transform-origin:left; transition:transform .25s; }
+    .nlink:hover { color:#6c3eb6!important; }
     .nlink:hover::after { transform:scaleX(1); }
 
     /* ── 모달 ── */
@@ -90,15 +101,15 @@
     .noscroll { overflow:hidden; }
 
     /* ── 폼 입력 ── */
-    .fi2 { background:rgba(255,255,255,.09); border:1.5px solid rgba(139,92,246,.45); color:#ffffff; border-radius:14px; padding:14px 18px; font-size:1.05rem; width:100%; transition:border-color .2s,box-shadow .2s; outline:none; font-family:'Noto Sans KR',sans-serif; }
-    .fi2::placeholder { color:rgba(200,180,255,.5); }
-    .fi2:focus { border-color:#a855f7; box-shadow:0 0 14px rgba(168,85,247,.35); }
-    .fi2 option { background:#2d1b5e; color:#ffffff; }
+    .fi2 { background:#f7f5ff; border:1.5px solid rgba(108,62,182,.3); color:#222; border-radius:14px; padding:14px 18px; font-size:1.05rem; width:100%; transition:border-color .2s,box-shadow .2s; outline:none; font-family:'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif; }
+    .fi2::placeholder { color:rgba(108,62,182,.4); }
+    .fi2:focus { border-color:#6c3eb6; box-shadow:0 0 12px rgba(108,62,182,.2); }
+    .fi2 option { background:#ffffff; color:#222; }
 
     /* ── 선택 버튼 ── */
-    .selb { display:flex; align-items:center; gap:8px; cursor:pointer; background:rgba(139,92,246,.1); border:1.5px solid rgba(139,92,246,.3); border-radius:12px; padding:9px 18px; transition:all .2s; color:#ffffff; font-weight:600; font-size:.95rem; white-space:nowrap; }
-    .selb.on { background:rgba(249,115,22,.25); border-color:#fb923c; color:#fdba74; }
-    .selb:hover:not(.on) { border-color:rgba(96,165,250,.6); }
+    .selb { display:flex; align-items:center; gap:8px; cursor:pointer; background:#f7f5ff; border:1.5px solid rgba(108,62,182,.25); border-radius:12px; padding:9px 18px; transition:all .2s; color:#3b1f6e; font-weight:600; font-size:.95rem; white-space:nowrap; }
+    .selb.on { background:rgba(212,164,58,.15); border-color:#d4a43a; color:#7a5300; }
+    .selb:hover:not(.on) { border-color:rgba(108,62,182,.5); background:#ede9fe; }
 
     /* ── 페이드인 ── */
     .fi { opacity:0; transform:translateY(22px); transition:opacity .65s ease,transform .65s ease; }
@@ -107,15 +118,16 @@
     #process .fi { opacity:1 !important; transform:none !important; }
 
     ::-webkit-scrollbar       { width:6px; }
-    ::-webkit-scrollbar-track { background:#1e0f3e; }
-    ::-webkit-scrollbar-thumb { background:linear-gradient(#7c3aed,#f97316); border-radius:99px; }
+    ::-webkit-scrollbar-track { background:#f7f5ff; }
+    ::-webkit-scrollbar-thumb { background:linear-gradient(#6c3eb6,#d4a43a); border-radius:99px; }
 
     .tag  { display:inline-block; padding:4px 12px; border-radius:99px; font-size:.77rem; font-weight:700; }
-    .snum { background:linear-gradient(135deg,#7c3aed,#a855f7); box-shadow:0 0 20px rgba(168,85,247,.5); }
+    .snum { background:linear-gradient(135deg,#3b1f6e,#6c3eb6); box-shadow:0 0 16px rgba(108,62,182,.3); }
     .serif { font-family:'Noto Serif KR', serif; }
 
     @keyframes spin   { to{transform:rotate(360deg)} }
     @keyframes bounce { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(.55)} }
+    @keyframes gradShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
   </style>
 </head>
 <body>
@@ -132,16 +144,16 @@
       cam.position.z=38;
       const rdr=new THREE.WebGLRenderer({canvas:cv,alpha:true,antialias:true});
       rdr.setSize(innerWidth,innerHeight); rdr.setPixelRatio(Math.min(devicePixelRatio,2));
-      sc.add(new THREE.AmbientLight(0x1a0840,1.2));
-      const ml=new THREE.PointLight(0xffffff,3,40); ml.position.set(0,0,15); sc.add(ml);
-      [[0x7c3aed,[-18,12,8]],[0xf97316,[18,-12,8]],[0x60a5fa,[0,18,6]],[0xa855f7,[-18,-12,6]]].forEach(([c,p])=>{
-        const l=new THREE.PointLight(c,2.0,60); l.position.set(...p); sc.add(l);
+      sc.add(new THREE.AmbientLight(0xd4c8f0,1.5));
+      const ml=new THREE.PointLight(0xffffff,2.5,40); ml.position.set(0,0,15); sc.add(ml);
+      [[0x6c3eb6,[-18,12,8]],[0xd4a43a,[18,-12,8]],[0x8b5cf6,[0,18,6]],[0x3b1f6e,[-18,-12,6]]].forEach(([c,p])=>{
+        const l=new THREE.PointLight(c,1.8,60); l.position.set(...p); sc.add(l);
       });
       const GS=[new THREE.BoxGeometry(1,1,1),new THREE.SphereGeometry(.65,14,10),new THREE.ConeGeometry(.55,1.2,7),
         new THREE.TorusGeometry(.55,.18,10,20),new THREE.OctahedronGeometry(.78),new THREE.TetrahedronGeometry(.88),
         new THREE.IcosahedronGeometry(.68),new THREE.CylinderGeometry(.38,.38,1.1,8),
         new THREE.TorusKnotGeometry(.42,.14,60,8),new THREE.DodecahedronGeometry(.68)];
-      const PAL=[0x7c3aed,0xa855f7,0x60a5fa,0x3b82f6,0xf97316,0xfb923c,0x8b5cf6,0x93c5fd,0xc084fc,0x38bdf8,0x4f46e5,0xe879f9];
+      const PAL=[0x6c3eb6,0x8b5cf6,0x3b1f6e,0xd4a43a,0xa78bfa,0xddd6fe,0xc4b5fd,0xe8950e,0x7c3aed,0xf59e0b,0x9f7aea,0xede9fe];
       const SH=[]; const N=80;
       for(let i=0;i<N;i++){
         const col=PAL[Math.floor(Math.random()*PAL.length)], wire=Math.random()<.28;
@@ -168,10 +180,10 @@
           if(d<16){const f=((16-d)/16)*.45;m.userData.vx+=(dx/d)*f;m.userData.vy+=(dy/d)*f;}});
       });
       let t=0;
-      (function loop(){requestAnimationFrame(loop);t+=.012;ml.color.setHSL(0.75+Math.sin(t*.4)*.08,1,.65);
+      (function loop(){requestAnimationFrame(loop);t+=.012;ml.color.setHSL(0.75+Math.sin(t*.4)*.06,0.6,.7);
         SH.forEach((m,i)=>{const ud=m.userData,dx=m.position.x-m3.x,dy=m.position.y-m3.y,d=Math.sqrt(dx*dx+dy*dy)+.01;
           if(d<11){const f=Math.pow((11-d)/11,2)*.14;ud.vx+=(dx/d)*f;ud.vy+=(dy/d)*f;
-            if(!ud.wire){m.material.color.setHSL(0.72+Math.sin(t+i*.4)*.08,1,.62);m.material.emissiveIntensity=.5;}}
+            if(!ud.wire){m.material.color.setHSL(0.73+Math.sin(t+i*.4)*.06,0.7,.58);m.material.emissiveIntensity=.3;}}
           else if(!ud.wire){m.material.color.set(ud.bc);m.material.emissiveIntensity=.18;}
           m.position.x+=ud.vx;m.position.y+=ud.vy;ud.vx*=.972;ud.vy*=.972;
           const bx=32,by=23;
@@ -186,33 +198,54 @@
       const ctx=cv.getContext('2d'); cv.width=innerWidth; cv.height=innerHeight;
       document.body.style.cursor='none';
 
-      /* ── 혜성 궤적 포인트 (긴 꼬리용) ── */
-      const TAIL_LEN=24;
-      const trail=[]; // {x,y,age}
+      /* ── 별똥별 꼬리 (짧게) ── */
+      const TAIL_LEN=10;
+      const trail=[];
       let mx=-300,my=-300,px=-300,py=-300;
 
-      /* ── 먼지 파티클 ── */
-      const dust=[];
-      function spawnDust(x,y,vx,vy){
-        for(let i=0;i<3;i++){
-          const spd=0.4+Math.random()*1.2;
-          const ang=Math.atan2(vy,vx)+Math.PI+(Math.random()-.5)*1.2;
-          dust.push({
+      /* ── 반짝이 파티클 ── */
+      const sparks=[];
+      function spawnSpark(x,y){
+        for(let i=0;i<2;i++){
+          const ang=Math.random()*Math.PI*2;
+          const spd=0.4+Math.random()*1.6;
+          sparks.push({
             x,y,
-            vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,
-            r:1+Math.random()*2.5,
-            life:1,decay:0.022+Math.random()*0.018,
-            hue:240+Math.random()*120   // 보라~하늘 범위
+            vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd,
+            r:0.8+Math.random()*1.8,
+            life:1, decay:0.032+Math.random()*0.022,
+            hue:40+Math.random()*35   // 노랑~금색
           });
         }
       }
 
       document.addEventListener('mousemove',e=>{
         px=mx; py=my; mx=e.clientX; my=e.clientY;
-        trail.push({x:mx,y:my,age:0});
+        trail.push({x:mx,y:my});
         if(trail.length>TAIL_LEN) trail.shift();
-        spawnDust(mx,my,mx-px,my-py);
+        spawnSpark(mx,my);
       });
+
+      /* ── 5각 별 그리기 함수 ── */
+      function drawStar(cx,cy,spikes,outerR,innerR,color,alpha){
+        ctx.save();
+        ctx.globalAlpha=alpha;
+        ctx.beginPath();
+        const step=Math.PI/spikes;
+        for(let i=0;i<spikes*2;i++){
+          const r=i%2===0?outerR:innerR;
+          const a=i*step - Math.PI/2;
+          i===0?ctx.moveTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r)
+               :ctx.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);
+        }
+        ctx.closePath();
+        ctx.fillStyle=color;
+        ctx.shadowColor=color;
+        ctx.shadowBlur=8;
+        ctx.fill();
+        ctx.globalAlpha=1;
+        ctx.restore();
+      }
 
       let t=0;
       (function frame(){
@@ -220,104 +253,81 @@
         t+=0.016;
         ctx.clearRect(0,0,cv.width,cv.height);
 
-        /* ── 혜성 꼬리 그리기 ── */
+        /* ── 꼬리 ── */
         if(trail.length>2){
-          /* 꼬리 방향 계산 (현재위치 → 과거방향으로 그림) */
           for(let i=0;i<trail.length-1;i++){
             const p0=trail[i], p1=trail[i+1];
-            const frac=(i+1)/trail.length;       // 0=꼬리끝, 1=머리
-            const alpha=frac*frac*0.85;
-            const width=(frac)*12+0.5;
-
-            /* 꼬리 색상 — 파랑(머리) → 보라 → 투명(꼬리) */
-            const hH=200+frac*60;                // 200°~260° (하늘→보라)
+            const frac=(i+1)/trail.length;
+            const alpha=frac*frac*0.75;
+            const width=frac*7+0.5;
+            const hue=45+frac*15;           // 금빛→노랑
             ctx.save();
             ctx.beginPath();
             ctx.moveTo(p0.x,p0.y);
             ctx.lineTo(p1.x,p1.y);
-            ctx.strokeStyle=`hsla(${hH},100%,75%,${alpha})`;
+            ctx.strokeStyle=`hsla(${hue},100%,78%,${alpha})`;
             ctx.lineWidth=width;
             ctx.lineCap='round';
             ctx.lineJoin='round';
             ctx.stroke();
             ctx.restore();
           }
-
-          /* 꼬리 발광 외곽선 (더 밝게) */
+          /* 꼬리 은은한 발광 */
           ctx.save();
           ctx.beginPath();
           ctx.moveTo(trail[0].x,trail[0].y);
           for(let i=1;i<trail.length;i++) ctx.lineTo(trail[i].x,trail[i].y);
-          ctx.strokeStyle='rgba(150,200,255,0.12)';
-          ctx.lineWidth=22;
+          ctx.strokeStyle='rgba(255,220,80,0.08)';
+          ctx.lineWidth=14;
           ctx.lineCap='round';
-          ctx.lineJoin='round';
-          ctx.filter='blur(8px)';
+          ctx.filter='blur(5px)';
           ctx.stroke();
           ctx.filter='none';
           ctx.restore();
         }
 
-        /* ── 먼지 파티클 업데이트 & 렌더링 ── */
-        for(let i=dust.length-1;i>=0;i--){
-          const d=dust[i];
-          d.x+=d.vx; d.y+=d.vy; d.life-=d.decay;
-          if(d.life<=0){dust.splice(i,1);continue;}
+        /* ── 반짝이 파티클 ── */
+        for(let i=sparks.length-1;i>=0;i--){
+          const s=sparks[i];
+          s.x+=s.vx; s.y+=s.vy;
+          s.vy+=0.04;           // 살짝 중력
+          s.life-=s.decay;
+          if(s.life<=0){sparks.splice(i,1);continue;}
+          drawStar(s.x,s.y, 4, s.r*s.life*2.2, s.r*s.life*0.9,
+            `hsla(${s.hue},100%,88%,1)`, s.life*0.85);
+        }
+
+        /* ── 별 핵 외부 발광 ── */
+        const glowG=ctx.createRadialGradient(mx,my,0,mx,my,22);
+        glowG.addColorStop(0,'rgba(255,255,180,0.85)');
+        glowG.addColorStop(0.45,'rgba(255,210,60,0.35)');
+        glowG.addColorStop(1,'rgba(255,160,0,0)');
+        ctx.beginPath(); ctx.arc(mx,my,22,0,6.28);
+        ctx.fillStyle=glowG; ctx.fill();
+
+        /* ── 별 모양 핵 (5각별, 맥박 효과) ── */
+        const pulse=1+Math.sin(t*7)*0.14;
+        drawStar(mx,my, 5, 10*pulse, 4.5*pulse, 'rgba(255,255,220,1)', 1);
+        drawStar(mx,my, 5, 6*pulse,  2.5*pulse, 'rgba(255,240,100,1)', 1);
+
+        /* ── 십자 빛줄기 ── */
+        const blink=0.6+Math.sin(t*9)*0.4;
+        [[1,0],[0,1],[-1,0],[0,-1]].forEach(([dx,dy])=>{
+          const rayLen=12*pulse;
+          const rayG=ctx.createLinearGradient(mx,my,mx+dx*rayLen,my+dy*rayLen);
+          rayG.addColorStop(0,`rgba(255,255,200,${blink*0.9})`);
+          rayG.addColorStop(1,'rgba(255,220,80,0)');
           ctx.beginPath();
-          ctx.arc(d.x,d.y,d.r*d.life,0,6.28);
-          ctx.fillStyle=`hsla(${d.hue},100%,82%,${d.life*0.7})`;
-          ctx.fill();
-        }
-
-        /* ── 혜성 핵(코마) ── */
-        /* 외부 코마 발광 */
-        const comaG=ctx.createRadialGradient(mx,my,0,mx,my,28);
-        comaG.addColorStop(0,'rgba(200,230,255,0.9)');
-        comaG.addColorStop(0.3,'rgba(150,190,255,0.55)');
-        comaG.addColorStop(0.7,'rgba(100,120,255,0.18)');
-        comaG.addColorStop(1,'rgba(80,80,220,0)');
-        ctx.beginPath(); ctx.arc(mx,my,28,0,6.28);
-        ctx.fillStyle=comaG; ctx.fill();
-
-        /* 핵 내부 밝은 점 (흰색~하늘) */
-        const nucG=ctx.createRadialGradient(mx,my,0,mx,my,7);
-        nucG.addColorStop(0,'rgba(255,255,255,1)');
-        nucG.addColorStop(0.5,'rgba(200,230,255,0.95)');
-        nucG.addColorStop(1,'rgba(120,170,255,0.4)');
-        ctx.beginPath(); ctx.arc(mx,my,7,0,6.28);
-        ctx.fillStyle=nucG; ctx.fill();
-
-        /* 반짝이는 하이라이트 점 */
-        const blink=0.7+Math.sin(t*8)*0.3;
-        ctx.beginPath(); ctx.arc(mx-2,my-2,2.5,0,6.28);
-        ctx.fillStyle=`rgba(255,255,255,${blink})`; ctx.fill();
-
-        /* ── 태양풍 이온 꼬리 빛줄기 (반대 방향) ── */
-        if(trail.length>3){
-          const dx=trail[trail.length-1].x-trail[Math.max(0,trail.length-8)].x;
-          const dy=trail[trail.length-1].y-trail[Math.max(0,trail.length-8)].y;
-          const len=Math.sqrt(dx*dx+dy*dy)||1;
-          const nx=-dx/len, ny=-dy/len;  // 반대 방향 (태양풍)
-          for(let ray=0;ray<3;ray++){
-            const spread=(ray-1)*0.3;
-            const rx=nx*Math.cos(spread)-ny*Math.sin(spread);
-            const ry=nx*Math.sin(spread)+ny*Math.cos(spread);
-            const rayLen=30+ray*8;
-            const ionG=ctx.createLinearGradient(mx,my,mx+rx*rayLen,my+ry*rayLen);
-            ionG.addColorStop(0,`rgba(160,220,255,${0.35-ray*0.08})`);
-            ionG.addColorStop(1,'rgba(100,160,255,0)');
-            ctx.beginPath();
-            ctx.moveTo(mx,my);
-            ctx.lineTo(mx+rx*rayLen,my+ry*rayLen);
-            ctx.strokeStyle=ionG;
-            ctx.lineWidth=2.5-ray*0.6;
-            ctx.stroke();
-          }
-        }
+          ctx.moveTo(mx,my);
+          ctx.lineTo(mx+dx*rayLen,my+dy*rayLen);
+          ctx.strokeStyle=rayG;
+          ctx.lineWidth=1.8;
+          ctx.stroke();
+        });
       })();
       window.addEventListener('resize',()=>{cv.width=innerWidth;cv.height=innerHeight;});
     }
-    window.addEventListener('load',()=>{initBG();initCursor();});
+    window.addEventListener('load',()=>{initCursor();});
   </script>
 
   <!-- React 앱 -->
@@ -381,7 +391,7 @@
         const cv=ref.current; if(!cv) return;
         cv.width=window.innerWidth; cv.height=window.innerHeight;
         const ctx=cv.getContext('2d');
-        const COLS=['#7c3aed','#a855f7','#60a5fa','#f97316','#fb923c','#38bdf8','#c084fc','#8b5cf6','#f59e0b','#e879f9'];
+        const COLS=['#6c3eb6','#8b5cf6','#d4a43a','#3b1f6e','#e8950e','#6c3eb6','#f59e0b','#c4b5fd','#9f7aea','#ddd6fe'];
         const pts=[];
         // 8번 버스트를 순차 발사
         for(let b=0;b<8;b++){
@@ -429,26 +439,26 @@
       useEffect(()=>{const fn=()=>setSc(window.scrollY>50);window.addEventListener('scroll',fn);return()=>window.removeEventListener('scroll',fn);},[]);
       const LK=[{l:'소개',h:'#about'},{l:'핵심기능',h:'#features'},{l:'진행방식',h:'#process'},{l:'문의',h:'#contact'}];
       return(<nav style={{position:'fixed',top:0,left:0,right:0,zIndex:100,
-        background:sc?'rgba(15,8,40,.97)':'rgba(15,8,40,.75)',backdropFilter:'blur(22px)',
-        borderBottom:'1px solid rgba(255,255,255,.09)',transition:'background .3s'}}>
+        background:sc?'rgba(255,255,255,.97)':'rgba(255,255,255,.85)',backdropFilter:'blur(22px)',
+        borderBottom:'1px solid rgba(108,62,182,.12)',transition:'background .3s',boxShadow:'0 2px 16px rgba(108,62,182,.1)'}}>
         <div style={{maxWidth:'1200px',margin:'0 auto',padding:'0 24px',height:'66px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <a href="#top" style={{display:'flex',alignItems:'center',gap:'10px',textDecoration:'none'}}>
             <span style={{fontSize:'1.8rem'}}>🤖</span>
             <div>
-              <div style={{fontSize:'1.3rem',fontWeight:900,lineHeight:1.1}}><span className="gt">AI BLOG</span><span style={{color:'#ffffff'}}> MASTER</span></div>
-              <div style={{fontSize:'.68rem',color:'rgba(240,238,255,.8)',fontWeight:600,letterSpacing:'.5px'}}>한국자아실현협회 | 센텀Q AI 연구소</div>
+              <div style={{fontSize:'1.3rem',fontWeight:900,lineHeight:1.1}}><span className="gt">AI BLOG</span><span style={{color:'#3b1f6e'}}> MASTER</span></div>
+              <div style={{fontSize:'.68rem',color:'#6b7280',fontWeight:600,letterSpacing:'.5px'}}>한국자아실현협회 | 센텀Q AI 연구소</div>
             </div>
           </a>
           <div style={{display:'flex',alignItems:'center',gap:'26px'}} className="hidden md:flex">
-            {LK.map(l=><a key={l.h} href={l.h} className="nlink" style={{color:'rgba(240,238,255,.85)',fontWeight:600,fontSize:'1.02rem'}}>{l.l}</a>)}
+            {LK.map(l=><a key={l.h} href={l.h} className="nlink" style={{color:'#3b1f6e',fontWeight:700,fontSize:'1.02rem'}}>{l.l}</a>)}
             <button onClick={onEnroll} className="bwarm" style={{padding:'10px 24px',borderRadius:'99px',fontSize:'1rem'}}>🎓 수강 신청</button>
           </div>
           <button className="md:hidden" onClick={()=>setOp(!op)} style={{background:'none',border:'none',cursor:'pointer',padding:'8px'}}>
-            {[0,1,2].map(i=><div key={i} style={{width:'26px',height:'2px',background:'#ffffff',marginBottom:i<2?'6px':0}}/>)}
+            {[0,1,2].map(i=><div key={i} style={{width:'26px',height:'2px',background:'#3b1f6e',marginBottom:i<2?'6px':0}}/>)}
           </button>
         </div>
-        {op&&(<div className="panel" style={{padding:'16px 24px 24px',borderTop:'1px solid rgba(255,255,255,.08)'}}>
-          {LK.map(l=><a key={l.h} href={l.h} onClick={()=>setOp(false)} style={{display:'block',padding:'13px 0',fontSize:'1.1rem',fontWeight:600,color:'#ffffff',textDecoration:'none',borderBottom:'1px solid rgba(255,255,255,.07)'}}>{l.l}</a>)}
+        {op&&(<div className="panel" style={{padding:'16px 24px 24px',borderTop:'1px solid rgba(108,62,182,.12)'}}>
+          {LK.map(l=><a key={l.h} href={l.h} onClick={()=>setOp(false)} style={{display:'block',padding:'13px 0',fontSize:'1.1rem',fontWeight:600,color:'#3b1f6e',textDecoration:'none',borderBottom:'1px solid rgba(108,62,182,.08)'}}>{l.l}</a>)}
           <button onClick={()=>{setOp(false);onEnroll();}} className="bwarm" style={{width:'100%',marginTop:'16px',padding:'14px',border:'none',fontSize:'1.1rem',borderRadius:'14px',cursor:'pointer'}}>🎓 수강신청하기</button>
         </div>)}
       </nav>);
@@ -459,31 +469,31 @@
     ━━━━━━━━━━━━━━━━━━━ */
     function Hero({cfg,onEnroll}){
       const kakao=(cfg?.contact?.kakao_url)||CFG.contact.kakao_url;
-      return(<section id="top" style={{minHeight:'100vh',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',textAlign:'center',padding:'100px 24px 60px',position:'relative'}}>
+      return(<section id="top" style={{minHeight:'100vh',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',textAlign:'center',padding:'100px 24px 60px',position:'relative',background:'linear-gradient(-45deg,#0d0020,#1a0a33,#3b1f6e,#5b21b6,#1a0a33)',backgroundSize:'400% 400%',animation:'gradShift 14s ease infinite'}}>
         <div style={{maxWidth:'900px',margin:'0 auto'}}>
           {/* 배지 */}
-          <div className="pcard" style={{display:'inline-flex',alignItems:'center',gap:'10px',padding:'8px 22px',borderRadius:'99px',fontSize:'.95rem',fontWeight:700,marginBottom:'28px',color:'#ffffff'}}>
-            <span>🏆</span><span className="gt" style={{fontWeight:900}}>한국자아실현협회</span>
-            <span style={{color:'rgba(255,255,255,.35)'}}>|</span>
-            <span style={{color:'rgba(240,238,255,.93)'}}>센텀Q AI 연구소</span>
+          <div style={{display:'inline-flex',alignItems:'center',gap:'10px',padding:'8px 22px',borderRadius:'99px',fontSize:'.95rem',fontWeight:700,marginBottom:'28px',background:'linear-gradient(135deg,#d4a43a,#e8950e)',color:'#fff',boxShadow:'0 4px 16px rgba(212,164,58,.4)'}}>
+            <span>🏆</span><span style={{fontWeight:900}}>한국자아실현협회</span>
+            <span style={{color:'rgba(255,255,255,.5)'}}>|</span>
+            <span>센텀Q AI 연구소</span>
           </div>
 
           {/* 메인 헤드라인 */}
-          <h1 className="serif" style={{fontSize:'clamp(1.8rem,4.5vw,3.4rem)',fontWeight:900,lineHeight:1.25,marginBottom:'20px',letterSpacing:'-.5px'}}>
-            <span style={{color:'#ffffff'}}>🚀 자면서도 돈이 들어오는</span><br/>
-            <span className="gt">'AI 무한 자동화 수익 모델'</span><span style={{color:'#ffffff'}}> 공개</span>
+          <h1 className="serif" style={{fontSize:'clamp(1.8rem,4.5vw,3.4rem)',fontWeight:900,lineHeight:1.25,marginBottom:'20px',letterSpacing:'-.5px',color:'#fff'}}>
+            🚀 자면서도 돈이 들어오는<br/>
+            <span className="gt">'AI 무한 자동화 수익 모델'</span><span style={{color:'#fff'}}> 공개</span>
           </h1>
-          <p style={{fontSize:'clamp(1rem,2vw,1.2rem)',color:'#fb923c',fontWeight:700,marginBottom:'28px',letterSpacing:'.3px'}}>
+          <p style={{fontSize:'clamp(1rem,2vw,1.2rem)',color:'#d4a43a',fontWeight:700,marginBottom:'28px',letterSpacing:'.3px'}}>
             💡 33년 엔지니어가 만든 현실 가능한 시스템
           </p>
 
           {/* 서브카피 */}
-          <div className="pinner" style={{borderRadius:'20px',padding:'24px 28px',marginBottom:'36px',textAlign:'left',border:'1px solid rgba(251,146,60,.35)'}}>
-            <p style={{fontSize:'clamp(.97rem,1.8vw,1.1rem)',color:'#ffffff',lineHeight:1.9}}>
-              안녕하세요 😊 <strong style={{color:'#f97316'}}>한국자아실현협회(준) 대표이자 33년 경력 컴퓨터 공학 전문가 박형종</strong>입니다.<br/><br/>
-              <strong style={{color:'#fb923c'}}>'AI BLOG MASTER'</strong>는 단순 자동 포스팅 프로그램이 아닙니다.<br/>
-              👉 <strong style={{color:'#93c5fd'}}>"수익이 만들어지는 구조 자체"</strong>를 당신 손에 쥐어드립니다.<br/><br/>
-              당신이 자는 동안에도 <strong style={{color:'#60a5fa'}}>AI는 글을 쓰고, 이미지를 만들고, 5개 플랫폼에 동시 배포</strong>합니다.
+          <div style={{background:'rgba(255,255,255,.1)',backdropFilter:'blur(10px)',borderRadius:'20px',padding:'24px 28px',marginBottom:'36px',textAlign:'left',border:'1px solid rgba(212,164,58,.4)'}}>
+            <p style={{fontSize:'clamp(.97rem,1.8vw,1.1rem)',color:'rgba(255,255,255,.92)',lineHeight:1.9}}>
+              안녕하세요 😊 <strong style={{color:'#d4a43a'}}>한국자아실현협회(준) 대표이자 33년 경력 컴퓨터 공학 전문가 박형종</strong>입니다.<br/><br/>
+              <strong style={{color:'#e8950e'}}>'AI BLOG MASTER'</strong>는 단순 자동 포스팅 프로그램이 아닙니다.<br/>
+              👉 <strong style={{color:'#c4b5fd'}}>"수익이 만들어지는 구조 자체"</strong>를 당신 손에 쥐어드립니다.<br/><br/>
+              당신이 자는 동안에도 <strong style={{color:'#93c5fd'}}>AI는 글을 쓰고, 이미지를 만들고, 5개 플랫폼에 동시 배포</strong>합니다.
             </p>
           </div>
 
@@ -498,17 +508,17 @@
 
           {/* 통계 */}
           <div style={{display:'flex',flexWrap:'wrap',justifyContent:'center',gap:'12px'}}>
-            {[{n:'33년+',d:'컴퓨터공학 경력',c:'#fb923c'},{n:'5개',d:'플랫폼 동시 배포',c:'#f97316'},{n:'100개',d:'하루 자동 포스팅',c:'#60a5fa'},{n:'24h',d:'AI 무한 자동화',c:'#93c5fd'}].map((s,i)=>(
-              <TCard key={i} cls="pcard" style={{padding:'16px 24px',borderRadius:'16px',minWidth:'128px',border:`1.5px solid ${s.c}55`,boxShadow:`0 0 16px ${s.c}22`}}>
-                <div style={{fontSize:'2rem',fontWeight:900,color:s.c,textShadow:`0 0 14px ${s.c}`}}>{s.n}</div>
-                <div style={{fontSize:'.8rem',color:'rgba(240,238,255,.92)',marginTop:'4px',fontWeight:600}}>{s.d}</div>
+            {[{n:'33년+',d:'컴퓨터공학 경력',c:'#d4a43a'},{n:'5개',d:'플랫폼 동시 배포',c:'#e8950e'},{n:'100개',d:'하루 자동 포스팅',c:'#c4b5fd'},{n:'24h',d:'AI 무한 자동화',c:'#93c5fd'}].map((s,i)=>(
+              <TCard key={i} style={{padding:'16px 24px',borderRadius:'16px',minWidth:'128px',background:'rgba(255,255,255,.12)',backdropFilter:'blur(8px)',border:`1.5px solid ${s.c}66`,boxShadow:`0 0 16px ${s.c}33`}}>
+                <div style={{fontSize:'2rem',fontWeight:900,color:s.c,textShadow:`0 0 12px ${s.c}`}}>{s.n}</div>
+                <div style={{fontSize:'.8rem',color:'rgba(255,255,255,.85)',marginTop:'4px',fontWeight:600}}>{s.d}</div>
               </TCard>
             ))}
           </div>
         </div>
-        <div style={{position:'absolute',bottom:'26px',left:'50%',transform:'translateX(-50%)',display:'flex',flexDirection:'column',alignItems:'center',gap:'8px',color:'rgba(240,238,255,.78)',fontSize:'.8rem'}}>
+        <div style={{position:'absolute',bottom:'26px',left:'50%',transform:'translateX(-50%)',display:'flex',flexDirection:'column',alignItems:'center',gap:'8px',color:'#6b7280',fontSize:'.8rem'}}>
           <span>아래로 스크롤</span>
-          <div style={{width:'1.5px',height:'30px',background:'linear-gradient(#fb923c,transparent)',animation:'bounce 1.6s ease infinite'}}></div>
+          <div style={{width:'1.5px',height:'30px',background:'linear-gradient(#d4a43a,transparent)',animation:'bounce 1.6s ease infinite'}}></div>
         </div>
       </section>);
     }
@@ -524,43 +534,43 @@
         '자동화 프로그램은 불안하다',
       ];
       const SHIFTS=[
-        {b:'블로그 1개 운영',a:'시스템 1개 → 블로그 10개 확장',c:'#f97316'},
-        {b:'콘텐츠 1개 작성',a:'콘텐츠 1개 → 5개 플랫폼 동시 배포',c:'#fb923c'},
-        {b:'하루 1개 포스팅',a:'하루 100개 자동 포스팅 구조',c:'#60a5fa'},
+        {b:'블로그 1개 운영',a:'시스템 1개 → 블로그 10개 확장',c:'#d4a43a'},
+        {b:'콘텐츠 1개 작성',a:'콘텐츠 1개 → 5개 플랫폼 동시 배포',c:'#e8950e'},
+        {b:'하루 1개 포스팅',a:'하루 100개 자동 포스팅 구조',c:'#6c3eb6'},
       ];
-      return(<section style={{padding:'72px 24px',background:'linear-gradient(180deg,#130828,#1e0f3e)'}}>
+      return(<section style={{padding:'72px 24px',background:'linear-gradient(180deg,#f0edff,#f7f5ff)'}}>
         <div style={{maxWidth:'1000px',margin:'0 auto'}}>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))',gap:'28px',alignItems:'start'}}>
 
             {/* 왼쪽: 고민 체크리스트 */}
             <div>
-              <div style={{display:'inline-flex',alignItems:'center',gap:'8px',background:'rgba(109,40,217,.2)',border:'1px solid rgba(249,115,22,.3)',borderRadius:'99px',padding:'5px 16px',fontSize:'.85rem',fontWeight:700,color:'#f97316',marginBottom:'20px'}}>
+              <div style={{display:'inline-flex',alignItems:'center',gap:'8px',background:'rgba(108,62,182,.2)',border:'1px solid rgba(212,164,58,.3)',borderRadius:'99px',padding:'5px 16px',fontSize:'.85rem',fontWeight:700,color:'#d4a43a',marginBottom:'20px'}}>
                 ❗ 혹시 이런 고민, 하고 계신가요?
               </div>
               <div style={{display:'flex',flexDirection:'column',gap:'12px',marginBottom:'24px'}}>
                 {PAINS.map((p,i)=>(
                   <div key={i} style={{display:'flex',alignItems:'center',gap:'12px',background:'rgba(255,60,60,.08)',border:'1px solid rgba(255,80,80,.2)',borderRadius:'12px',padding:'13px 16px'}}>
                     <span style={{color:'#ff6b6b',fontSize:'1.1rem',flexShrink:0}}>✗</span>
-                    <span style={{color:'#ffffff',fontWeight:600,fontSize:'1rem'}}>{p}</span>
+                    <span style={{color:'#3b1f6e',fontWeight:600,fontSize:'1rem'}}>{p}</span>
                   </div>
                 ))}
               </div>
-              <div style={{background:'rgba(109,40,217,.15)',border:'1px solid rgba(249,115,22,.35)',borderRadius:'16px',padding:'18px 20px'}}>
-                <p style={{color:'#ffffff',fontWeight:800,fontSize:'1.05rem',lineHeight:1.65}}>
+              <div style={{background:'rgba(108,62,182,.15)',border:'1px solid rgba(212,164,58,.35)',borderRadius:'16px',padding:'18px 20px'}}>
+                <p style={{color:'#3b1f6e',fontWeight:800,fontSize:'1.05rem',lineHeight:1.65}}>
                   👉 결론은 하나입니다.<br/>
-                  <span style={{color:'#f97316'}}>"지금 방식으로는 절대 '자동 수익'이 만들어지지 않습니다."</span>
+                  <span style={{color:'#d4a43a'}}>"지금 방식으로는 절대 '자동 수익'이 만들어지지 않습니다."</span>
                 </p>
-                <p style={{color:'#f97316',marginTop:'10px',fontSize:'.95rem',lineHeight:1.6}}>
-                  🔥 이제 <strong style={{color:'#fb923c'}}>패러다임을 바꿔야 합니다.</strong><br/>
+                <p style={{color:'#d4a43a',marginTop:'10px',fontSize:'.95rem',lineHeight:1.6}}>
+                  🔥 이제 <strong style={{color:'#e8950e'}}>패러다임을 바꿔야 합니다.</strong><br/>
                   단순히 "열심히" 하는 시대는 끝났습니다.<br/>
-                  이제는 <strong style={{color:'#93c5fd'}}>"구조를 만드는 사람"</strong>만 돈을 법니다.
+                  이제는 <strong style={{color:'#6c3eb6'}}>"구조를 만드는 사람"</strong>만 돈을 법니다.
                 </p>
               </div>
             </div>
 
             {/* 오른쪽: 패러다임 전환 */}
             <div>
-              <div style={{display:'inline-flex',alignItems:'center',gap:'8px',background:'rgba(139,92,246,.15)',border:'1px solid rgba(168,85,247,.3)',borderRadius:'99px',padding:'5px 16px',fontSize:'.85rem',fontWeight:700,color:'#93c5fd',marginBottom:'20px'}}>
+              <div style={{display:'inline-flex',alignItems:'center',gap:'8px',background:'rgba(139,92,246,.15)',border:'1px solid rgba(139,92,246,.3)',borderRadius:'99px',padding:'5px 16px',fontSize:'.85rem',fontWeight:700,color:'#6c3eb6',marginBottom:'20px'}}>
                 💡 이렇게 해야 합니다
               </div>
               <div style={{display:'flex',flexDirection:'column',gap:'14px',marginBottom:'24px'}}>
@@ -572,16 +582,16 @@
                       </div>
                       <div style={{background:'rgba(0,0,0,.3)',display:'flex',alignItems:'center',padding:'0 10px',color:'rgba(255,255,255,.4)',fontSize:'1.2rem'}}>→</div>
                       <div style={{background:`${s.c}15`,padding:'12px 14px',display:'flex',alignItems:'center',flex:1.4,gap:'8px'}}>
-                        <span style={{color:'#ffffff',fontWeight:700,fontSize:'.9rem'}}>✅ {s.a}</span>
+                        <span style={{color:'#3b1f6e',fontWeight:700,fontSize:'.9rem'}}>✅ {s.a}</span>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-              <div style={{background:'linear-gradient(135deg,rgba(109,40,217,.25),rgba(139,92,246,.15))',border:'1px solid rgba(249,115,22,.4)',borderRadius:'16px',padding:'20px',textAlign:'center'}}>
-                <p style={{color:'#ffffff',fontWeight:900,fontSize:'1.15rem',lineHeight:1.6,fontFamily:'Noto Serif KR, serif'}}>
+              <div style={{background:'linear-gradient(135deg,rgba(108,62,182,.25),rgba(139,92,246,.15))',border:'1px solid rgba(212,164,58,.4)',borderRadius:'16px',padding:'20px',textAlign:'center'}}>
+                <p style={{color:'#3b1f6e',fontWeight:900,fontSize:'1.15rem',lineHeight:1.6,fontFamily:'Noto Serif KR, serif'}}>
                   💬 "당신이 자는 동안에도<br/>
-                  <span style={{color:'#f97316'}}>AI는 돈을 벌고 있어야 합니다."</span>
+                  <span style={{color:'#d4a43a'}}>AI는 돈을 벌고 있어야 합니다."</span>
                 </p>
                 <button onClick={onEnroll} className="bwarm" style={{marginTop:'16px',padding:'13px 32px',borderRadius:'13px',border:'none',fontSize:'1rem',cursor:'pointer',fontWeight:900}}>
                   🚀 구조 만드는 법 배우기
@@ -599,50 +609,50 @@
     function About({cfg}){
       const ins=cfg?.instructor||{name:'박형종',title:'33년 경력 베테랑 엔지니어 & 스마트AI경영 전문가',company:'한국자아실현협회 | 센텀Q AI 연구소',company_en:'Gimhae Centum Q',specialties:['스마트AI경영','블로그 자동화','시니어 디지털 교육','AI 수익화 전략']};
       const ct=cfg?.contact||CFG.contact;
-      return(<section id="about" className="panel" style={{padding:'80px 24px',borderTop:'1px solid rgba(255,255,255,.08)',borderBottom:'1px solid rgba(255,255,255,.08)'}}>
+      return(<section id="about" className="panel" style={{padding:'80px 24px',borderTop:'1px solid rgba(108,62,182,.08)',borderBottom:'1px solid rgba(108,62,182,.08)'}}>
         <div style={{maxWidth:'1100px',margin:'0 auto'}}>
           <div style={{textAlign:'center',marginBottom:'52px'}}>
             <div className="rbl" style={{width:'60px',margin:'0 auto 16px'}}></div>
-            <div style={{color:'rgba(251,146,60,.8)',fontWeight:700,fontSize:'1rem',marginBottom:'8px',letterSpacing:'2px',textTransform:'uppercase'}}>About · 마음을 여는 이야기</div>
-            <h2 className="serif" style={{fontSize:'clamp(1.6rem,3.2vw,2.5rem)',fontWeight:900,color:'#ffffff',textShadow:'0 2px 12px rgba(0,0,0,.6)'}}>
+            <div style={{color:'rgba(212,164,58,.8)',fontWeight:700,fontSize:'1rem',marginBottom:'8px',letterSpacing:'2px',textTransform:'uppercase'}}>About · 마음을 여는 이야기</div>
+            <h2 className="serif" style={{fontSize:'clamp(1.6rem,3.2vw,2.5rem)',fontWeight:900,color:'#3b1f6e'}}>
               <span className="gt">"33년의 경험이</span>
-              <span style={{color:'#ffffff'}}> 당신의 날개가 됩니다"</span>
+              <span style={{color:'#3b1f6e'}}> 당신의 날개가 됩니다"</span>
             </h2>
           </div>
           <div style={{display:'flex',flexWrap:'wrap',alignItems:'flex-start',gap:'44px'}}>
             {/* 프로필 */}
             <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:'18px',flexShrink:0,margin:'0 auto'}}>
-              <div style={{width:'188px',height:'188px',borderRadius:'50%',background:'linear-gradient(135deg,#7c3aed,#a855f7,#60a5fa)',padding:'4px',boxShadow:'0 0 45px rgba(109,40,217,.55)'}}>
-                <div style={{width:'100%',height:'100%',borderRadius:'50%',background:'#1c1050',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'5.2rem'}}>👨‍💼</div>
+              <div style={{width:'188px',height:'188px',borderRadius:'50%',background:'linear-gradient(135deg,#7c3aed,#a855f7,#60a5fa)',padding:'4px',boxShadow:'0 0 45px rgba(108,62,182,.55)'}}>
+                <div style={{width:'100%',height:'100%',borderRadius:'50%',background:'#ffffff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'5.2rem'}}>👨‍💼</div>
               </div>
               <div style={{textAlign:'center'}}>
-                <div style={{fontSize:'1.5rem',fontWeight:900,color:'#ffffff'}} className="gt">{ins.name}</div>
-                <div style={{color:'rgba(240,238,255,.9)',fontSize:'.85rem',marginTop:'4px'}}>{ins.company}</div>
+                <div style={{fontSize:'1.5rem',fontWeight:900,color:'#3b1f6e'}} className="gt">{ins.name}</div>
+                <div style={{color:'#6b7280',fontSize:'.85rem',marginTop:'4px'}}>{ins.company}</div>
               </div>
               <div style={{display:'flex',flexWrap:'wrap',justifyContent:'center',gap:'6px',maxWidth:'230px'}}>
                 {(ins.specialties||[]).map((sp,i)=>(
-                  <span key={i} className="tag pcard" style={{color:['#fb923c','#c084fc','#60a5fa','#93c5fd'][i%4],fontSize:'.76rem'}}>{sp}</span>
+                  <span key={i} className="tag pcard" style={{color:['#e8950e','#8b5cf6','#6c3eb6','#ede9fe'][i%4],fontSize:'.76rem'}}>{sp}</span>
                 ))}
               </div>
             </div>
             {/* 텍스트 */}
             <div style={{flex:1,minWidth:'280px'}}>
-              <div className="pinner" style={{borderRadius:'20px',padding:'28px',marginBottom:'24px',border:'1px solid rgba(251,146,60,.25)',position:'relative'}}>
-                <div style={{position:'absolute',top:'-12px',left:'24px',background:'#fb923c',borderRadius:'99px',padding:'4px 14px',fontSize:'.8rem',fontWeight:800,color:'#1a0a00'}}>박형종 대표</div>
-                <p className="serif" style={{fontSize:'clamp(1rem,1.9vw,1.15rem)',color:'rgba(240,238,255,.88)',lineHeight:1.9,textShadow:'0 1px 4px rgba(0,0,0,.5)'}}>
-                  기술은 당신의 자리를 뺏는 것이 아니라, <strong style={{color:'#fb923c'}}>당신의 지혜를 온 세상에 퍼뜨릴 날개</strong>가 되어줄 것입니다.<br/><br/>
-                  33년 경력의 엔지니어인 제가 확신합니다. 이제 소외의 두려움 대신, <strong style={{color:'#60a5fa'}}>내일의 설렘</strong>을 만나보세요.
+              <div className="pinner" style={{borderRadius:'20px',padding:'28px',marginBottom:'24px',border:'1px solid rgba(212,164,58,.25)',position:'relative'}}>
+                <div style={{position:'absolute',top:'-12px',left:'24px',background:'#e8950e',borderRadius:'99px',padding:'4px 14px',fontSize:'.8rem',fontWeight:800,color:'#1a0a00'}}>박형종 대표</div>
+                <p className="serif" style={{fontSize:'clamp(1rem,1.9vw,1.15rem)',color:'#6b7280',lineHeight:1.9,textShadow:'0 1px 4px rgba(0,0,0,.5)'}}>
+                  기술은 당신의 자리를 뺏는 것이 아니라, <strong style={{color:'#e8950e'}}>당신의 지혜를 온 세상에 퍼뜨릴 날개</strong>가 되어줄 것입니다.<br/><br/>
+                  33년 경력의 엔지니어인 제가 확신합니다. 이제 소외의 두려움 대신, <strong style={{color:'#6c3eb6'}}>내일의 설렘</strong>을 만나보세요.
                 </p>
               </div>
               <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:'12px'}}>
-                {[{ico:'🏢',lb:'소속',val:ins.company,c:'#fb923c'},{ico:'📖',lb:'저서',val:'AI After Human',c:'#60a5fa'},
-                  {ico:'📍',lb:'주소',val:'경남 김해시 주촌면',c:'#c084fc'},{ico:'📞',lb:'전화',val:'010-4554-9110',c:'#a855f7'}
+                {[{ico:'🏢',lb:'소속',val:ins.company,c:'#e8950e'},{ico:'📖',lb:'저서',val:'AI After Human',c:'#6c3eb6'},
+                  {ico:'📍',lb:'주소',val:'경남 김해시 주촌면',c:'#8b5cf6'},{ico:'📞',lb:'전화',val:'010-4554-9110',c:'#8b5cf6'}
                 ].map((c,i)=>(
                   <div key={i} className="pinner" style={{padding:'13px',borderRadius:'13px',borderColor:`${c.c}44`,display:'flex',alignItems:'flex-start',gap:'10px'}}>
                     <span style={{fontSize:'1.4rem'}}>{c.ico}</span>
                     <div>
-                      <div style={{fontSize:'.7rem',color:'rgba(240,238,255,.85)',textTransform:'uppercase',letterSpacing:'1px',fontWeight:600}}>{c.lb}</div>
-                      <div style={{color:'#ffffff',fontWeight:700,fontSize:'.88rem',marginTop:'2px'}}>{c.val}</div>
+                      <div style={{fontSize:'.7rem',color:'#6b7280',textTransform:'uppercase',letterSpacing:'1px',fontWeight:600}}>{c.lb}</div>
+                      <div style={{color:'#3b1f6e',fontWeight:700,fontSize:'.88rem',marginTop:'2px'}}>{c.val}</div>
                     </div>
                   </div>
                 ))}
@@ -658,29 +668,29 @@
     ━━━━━━━━━━━━━━━━━━━ */
     function Features(){
       const FS=[
-        {ico:'✍️',tag:'Blog Master Auto',tc:'#c084fc',badge:'핵심 엔진',
+        {ico:'✍️',tag:'Blog Master Auto',tc:'#8b5cf6',badge:'핵심 엔진',
           t:'AI가 대신 써주는 감동 콘텐츠',
           d:'주제만 입력하면 AI가 SEO 최적화 본문·제목·태그를 완성합니다. 당신의 경험과 감성이 녹아든 글을 세상에 발신합니다.',
           stats:[{n:'24h',l:'자동 포스팅'},{n:'SEO',l:'검색 최적화'},{n:'∞',l:'무제한 주제'}]},
-        {ico:'🖼️',tag:'Multi-Modal AI',tc:'#f97316',badge:'이미지 생성',
+        {ico:'🖼️',tag:'Multi-Modal AI',tc:'#d4a43a',badge:'이미지 생성',
           t:'글에 딱 맞는 AI 이미지 자동 생성',
           d:'본문 내용을 분석하여 최적의 썸네일·본문 이미지를 AI가 자동으로 만들어 삽입합니다. 별도 디자인 도구 불필요.',
           stats:[{n:'DALL·E',l:'이미지 엔진'},{n:'자동',l:'썸네일 생성'},{n:'HD',l:'고화질 출력'}]},
-        {ico:'🔐',tag:'Secure Logic',tc:'#a855f7',badge:'보안 시스템',
+        {ico:'🔐',tag:'Secure Logic',tc:'#8b5cf6',badge:'보안 시스템',
           t:'API KEY 암호화 · 완전한 보안',
           d:'33년 엔지니어 노하우가 담긴 암호화 로직으로 API 키·개인정보를 안전하게 보관합니다. 해킹 걱정 없이 운영하세요.',
           stats:[{n:'AES',l:'암호화'},{n:'0',l:'정보 유출'},{n:'100%',l:'안심 운영'}]},
-        {ico:'💰',tag:'AdSense Pass',tc:'#93c5fd',badge:'수익 전략',
+        {ico:'💰',tag:'AdSense Pass',tc:'#ede9fe',badge:'수익 전략',
           t:'구글 애드센스 승인 전략 포함',
           d:'단순 자동화가 아닙니다. 애드센스 승인을 통과하는 콘텐츠 전략과 수익 극대화 설정 가이드를 함께 제공합니다.',
           stats:[{n:'승인',l:'전략 가이드'},{n:'CPM',l:'수익 최적화'},{n:'30일',l:'목표 승인'}]},
       ];
-      return(<section id="features" style={{padding:'80px 24px',background:'linear-gradient(180deg,#130828 0%,#1e0f3e 100%)'}}>
+      return(<section id="features" style={{padding:'80px 24px',background:'#f7f5ff'}}>
         <div style={{maxWidth:'1100px',margin:'0 auto'}}>
           <div className="fi" style={{textAlign:'center',marginBottom:'56px'}}>
             <div className="rbl" style={{width:'60px',margin:'0 auto 16px'}}></div>
-            <div style={{color:'#c084fc',fontWeight:700,fontSize:'1rem',marginBottom:'10px',letterSpacing:'3px',textTransform:'uppercase'}}>✦ 핵심 기능 ✦</div>
-            <h2 className="serif" style={{fontSize:'clamp(1.5rem,3.2vw,2.4rem)',fontWeight:900,color:'#ffffff',textShadow:'0 2px 12px rgba(0,0,0,.6)'}}>
+            <div style={{color:'#8b5cf6',fontWeight:700,fontSize:'1rem',marginBottom:'10px',letterSpacing:'3px',textTransform:'uppercase'}}>✦ 핵심 기능 ✦</div>
+            <h2 className="serif" style={{fontSize:'clamp(1.5rem,3.2vw,2.4rem)',fontWeight:900,color:'#3b1f6e'}}>
               "기술은 제가 책임집니다.<br/>
               <span className="gt">당신은 삶에만 집중하세요."</span>
             </h2>
@@ -698,15 +708,15 @@
                     <div style={{background:`${f.tc}22`,border:`1px solid ${f.tc}55`,borderRadius:'99px',padding:'3px 10px',fontSize:'.68rem',fontWeight:800,color:f.tc,whiteSpace:'nowrap'}}>{f.badge}</div>
                   </div>
                   {/* 본문 */}
-                  <div style={{background:'#1c1050',padding:'22px 24px',flex:1}}>
+                  <div style={{background:'#ffffff',padding:'22px 24px',flex:1}}>
                     <div style={{fontSize:'.75rem',color:`${f.tc}cc`,fontWeight:700,letterSpacing:'1.5px',textTransform:'uppercase',marginBottom:'6px'}}>{f.tag}</div>
-                    <h3 style={{fontSize:'1.2rem',fontWeight:900,color:'#ffffff',marginBottom:'9px'}}>{f.t}</h3>
-                    <p style={{color:'#ffffff',lineHeight:1.75,fontSize:'.95rem',marginBottom:'14px'}}>{f.d}</p>
+                    <h3 style={{fontSize:'1.2rem',fontWeight:900,color:'#3b1f6e',marginBottom:'9px'}}>{f.t}</h3>
+                    <p style={{color:'#6b7280',lineHeight:1.75,fontSize:'.95rem',marginBottom:'14px'}}>{f.d}</p>
                     <div style={{display:'flex',flexWrap:'wrap',gap:'10px'}}>
                       {f.stats.map((s,j)=>(
                         <div key={j} style={{background:`${f.tc}10`,border:`1px solid ${f.tc}33`,borderRadius:'10px',padding:'6px 14px',textAlign:'center'}}>
                           <div style={{fontSize:'1rem',fontWeight:900,color:f.tc}}>{s.n}</div>
-                          <div style={{fontSize:'.68rem',color:'#c084fc',fontWeight:600}}>{s.l}</div>
+                          <div style={{fontSize:'.68rem',color:'#8b5cf6',fontWeight:600}}>{s.l}</div>
                         </div>
                       ))}
                     </div>
@@ -724,17 +734,17 @@
     ━━━━━━━━━━━━━━━━━━━ */
     function PlatformTable({onEnroll}){
       const PLATS=[
-        {ico:'🌐',name:'구글/워드프레스',strategy:'AI 고단가 키워드 자동 포스팅',revenue:'💰 구글 애드센스',c:'#f97316'},
-        {ico:'📝',name:'네이버/티스토리',strategy:'타겟 맞춤 콘텐츠 자동 생성',revenue:'💰 제휴 마케팅',c:'#fb923c'},
-        {ico:'🎬',name:'유튜브 쇼츠',strategy:'글 → 영상 자동 변환',revenue:'💰 조회수 수익',c:'#60a5fa'},
-        {ico:'📱',name:'인스타/틱톡',strategy:'AI 콘텐츠 자동 업로드',revenue:'💰 트래픽 유입',c:'#a855f7'},
+        {ico:'🌐',name:'구글/워드프레스',strategy:'AI 고단가 키워드 자동 포스팅',revenue:'💰 구글 애드센스',c:'#d4a43a'},
+        {ico:'📝',name:'네이버/티스토리',strategy:'타겟 맞춤 콘텐츠 자동 생성',revenue:'💰 제휴 마케팅',c:'#e8950e'},
+        {ico:'🎬',name:'유튜브 쇼츠',strategy:'글 → 영상 자동 변환',revenue:'💰 조회수 수익',c:'#6c3eb6'},
+        {ico:'📱',name:'인스타/틱톡',strategy:'AI 콘텐츠 자동 업로드',revenue:'💰 트래픽 유입',c:'#8b5cf6'},
       ];
-      return(<section style={{padding:'72px 24px',background:'linear-gradient(180deg,#1e0f3e,#2d1b5e)'}}>
+      return(<section style={{padding:'72px 24px',background:'#ffffff'}}>
         <div style={{maxWidth:'1000px',margin:'0 auto'}}>
           <div style={{textAlign:'center',marginBottom:'44px'}}>
             <div className="rbl" style={{width:'60px',margin:'0 auto 16px'}}></div>
-            <div style={{color:'#f97316',fontWeight:700,fontSize:'1rem',marginBottom:'10px',letterSpacing:'3px',textTransform:'uppercase'}}>✦ 플랫폼 통합 자동화 구조 ✦</div>
-            <h2 className="serif" style={{fontSize:'clamp(1.4rem,3vw,2.2rem)',fontWeight:900,color:'#ffffff'}}>
+            <div style={{color:'#d4a43a',fontWeight:700,fontSize:'1rem',marginBottom:'10px',letterSpacing:'3px',textTransform:'uppercase'}}>✦ 플랫폼 통합 자동화 구조 ✦</div>
+            <h2 className="serif" style={{fontSize:'clamp(1.4rem,3vw,2.2rem)',fontWeight:900,color:'#3b1f6e'}}>
               📊 <span className="gt">하나의 시스템으로</span> 모든 플랫폼을 장악합니다
             </h2>
           </div>
@@ -742,10 +752,10 @@
           {/* 플랫폼 표 */}
           <div style={{borderRadius:'20px',overflow:'hidden',border:'1px solid rgba(139,92,246,.25)',marginBottom:'36px'}}>
             {/* 헤더 */}
-            <div style={{display:'grid',gridTemplateColumns:'1.2fr 2fr 1.5fr',background:'rgba(109,40,217,.3)',padding:'14px 20px',gap:'16px'}}>
-              <div style={{color:'#f97316',fontWeight:800,fontSize:'.9rem'}}>플랫폼</div>
-              <div style={{color:'#f97316',fontWeight:800,fontSize:'.9rem'}}>자동화 전략</div>
-              <div style={{color:'#f97316',fontWeight:800,fontSize:'.9rem'}}>수익 구조</div>
+            <div style={{display:'grid',gridTemplateColumns:'1.2fr 2fr 1.5fr',background:'rgba(108,62,182,.3)',padding:'14px 20px',gap:'16px'}}>
+              <div style={{color:'#d4a43a',fontWeight:800,fontSize:'.9rem'}}>플랫폼</div>
+              <div style={{color:'#d4a43a',fontWeight:800,fontSize:'.9rem'}}>자동화 전략</div>
+              <div style={{color:'#d4a43a',fontWeight:800,fontSize:'.9rem'}}>수익 구조</div>
             </div>
             {/* 행들 */}
             {PLATS.map((p,i)=>(
@@ -754,7 +764,7 @@
                   <span style={{fontSize:'1.3rem'}}>{p.ico}</span>
                   <span style={{color:p.c,fontWeight:700,fontSize:'.9rem'}}>{p.name}</span>
                 </div>
-                <div style={{color:'#ffffff',fontSize:'.9rem',lineHeight:1.5}}>{p.strategy}</div>
+                <div style={{color:'#6b7280',fontSize:'.9rem',lineHeight:1.5}}>{p.strategy}</div>
                 <div style={{background:`${p.c}15`,border:`1px solid ${p.c}33`,borderRadius:'99px',padding:'4px 12px',color:p.c,fontWeight:700,fontSize:'.85rem',display:'inline-block'}}>{p.revenue}</div>
               </div>
             ))}
@@ -771,18 +781,18 @@
               </div>
             </TCard>
             <TCard cls="fi" style={{transitionDelay:'80ms'}}>
-              <div style={{background:'rgba(109,40,217,.1)',border:'1px solid rgba(249,115,22,.3)',borderRadius:'16px',padding:'20px'}}>
-                <div style={{color:'#f97316',fontWeight:800,fontSize:'1rem',marginBottom:'12px'}}>✅ 이렇게 해야 돈이 됩니다</div>
+              <div style={{background:'rgba(108,62,182,.1)',border:'1px solid rgba(212,164,58,.3)',borderRadius:'16px',padding:'20px'}}>
+                <div style={{color:'#d4a43a',fontWeight:800,fontSize:'1rem',marginBottom:'12px'}}>✅ 이렇게 해야 돈이 됩니다</div>
                 {['시스템 1개 → 블로그 10개 확장 ✅','콘텐츠 1개 → 5개 플랫폼 동시 배포 ✅','하루 100개 자동 포스팅 구조 ✅'].map((t,i)=>(
-                  <div key={i} style={{color:'#ffffff',fontSize:'.92rem',padding:'5px 0',borderBottom:'1px solid rgba(168,85,247,.1)'}}>{t}</div>
+                  <div key={i} style={{color:'#6b7280',fontSize:'.92rem',padding:'5px 0',borderBottom:'1px solid rgba(139,92,246,.1)'}}>{t}</div>
                 ))}
               </div>
             </TCard>
           </div>
 
           <div style={{textAlign:'center'}}>
-            <p style={{color:'#f97316',fontSize:'1rem',marginBottom:'16px'}}>
-              🚀 <strong style={{color:'#ffffff'}}>핵심은 "무한 확장 구조"</strong>를 손에 넣는 것입니다.
+            <p style={{color:'#d4a43a',fontSize:'1rem',marginBottom:'16px'}}>
+              🚀 <strong style={{color:'#3b1f6e'}}>핵심은 "무한 확장 구조"</strong>를 손에 넣는 것입니다.
             </p>
             <button onClick={onEnroll} className="bwarm" style={{padding:'15px 40px',border:'none',fontSize:'1.05rem',borderRadius:'14px',cursor:'pointer',fontWeight:900}}>
               📊 수익 구조 배우기
@@ -809,12 +819,12 @@
         '콘텐츠 → 수익 전환 구조',
         '무한 확장 세팅 실전 방법',
       ];
-      return(<section style={{padding:'72px 24px',background:'linear-gradient(180deg,#2d1b5e,#1e0f3e)'}}>
+      return(<section style={{padding:'72px 24px',background:'#f7f5ff'}}>
         <div style={{maxWidth:'1000px',margin:'0 auto'}}>
           <div style={{textAlign:'center',marginBottom:'44px'}}>
             <div className="rbl" style={{width:'60px',margin:'0 auto 16px'}}></div>
-            <div style={{color:'#fb923c',fontWeight:700,fontSize:'1rem',marginBottom:'10px',letterSpacing:'3px',textTransform:'uppercase'}}>✦ 왜 직접 설계 능력인가 ✦</div>
-            <h2 className="serif" style={{fontSize:'clamp(1.4rem,3vw,2.2rem)',fontWeight:900,color:'#ffffff'}}>
+            <div style={{color:'#e8950e',fontWeight:700,fontSize:'1rem',marginBottom:'10px',letterSpacing:'3px',textTransform:'uppercase'}}>✦ 왜 직접 설계 능력인가 ✦</div>
+            <h2 className="serif" style={{fontSize:'clamp(1.4rem,3vw,2.2rem)',fontWeight:900,color:'#3b1f6e'}}>
               <span style={{color:'#ff6b6b'}}>⚠️ 시중 자동화 프로그램의</span><br/>
               <span className="gt">치명적인 문제</span>
             </h2>
@@ -832,22 +842,22 @@
                   </div>
                 ))}
               </div>
-              <div style={{background:'rgba(109,40,217,.12)',border:'1px solid rgba(249,115,22,.35)',borderRadius:'16px',padding:'18px 20px'}}>
-                <p style={{color:'#ffffff',fontWeight:800,fontSize:'1.05rem',lineHeight:1.65}}>
+              <div style={{background:'rgba(108,62,182,.12)',border:'1px solid rgba(212,164,58,.35)',borderRadius:'16px',padding:'18px 20px'}}>
+                <p style={{color:'#3b1f6e',fontWeight:800,fontSize:'1.05rem',lineHeight:1.65}}>
                   ✅ 해결 방법은 단 하나입니다.<br/>
-                  <span style={{color:'#f97316'}}>"직접 설계할 줄 아는 사람만 살아남는다."</span>
+                  <span style={{color:'#d4a43a'}}>"직접 설계할 줄 아는 사람만 살아남는다."</span>
                 </p>
               </div>
             </div>
 
             {/* 이번 강의에서 배우는 것 */}
             <div>
-              <div style={{background:'rgba(0,100,200,.12)',border:'1px solid rgba(139,92,246,.3)',borderRadius:'18px',padding:'24px'}}>
-                <div style={{color:'#f97316',fontWeight:800,fontSize:'1.05rem',marginBottom:'16px'}}>🧠 이번 강의에서 배우는 핵심</div>
+              <div style={{background:'rgba(108,62,182,.06)',border:'1px solid rgba(139,92,246,.2)',borderRadius:'18px',padding:'24px'}}>
+                <div style={{color:'#d4a43a',fontWeight:800,fontSize:'1.05rem',marginBottom:'16px'}}>🧠 이번 강의에서 배우는 핵심</div>
                 {LEARNS.map((l,i)=>(
                   <div key={i} style={{display:'flex',alignItems:'flex-start',gap:'10px',padding:'10px 0',borderBottom:'1px solid rgba(139,92,246,.12)'}}>
-                    <span style={{color:'#93c5fd',fontWeight:900,flexShrink:0}}>✔</span>
-                    <span style={{color:'#ffffff',fontSize:'.97rem',fontWeight:600}}>{l}</span>
+                    <span style={{color:'#8b5cf6',fontWeight:900,flexShrink:0}}>✔</span>
+                    <span style={{color:'#3b1f6e',fontSize:'.97rem',fontWeight:600}}>{l}</span>
                   </div>
                 ))}
                 <div style={{marginTop:'20px',textAlign:'center'}}>
@@ -871,20 +881,20 @@
       const Arrow=()=>(
         <div style={{display:'flex',justifyContent:'center',alignItems:'center',padding:'10px 0',gap:'6px'}}>
           <div style={{height:'2px',width:'40px',background:'linear-gradient(90deg,transparent,#a855f7)'}}/>
-          <div style={{color:'#f97316',fontSize:'1.4rem',lineHeight:1}}>▼</div>
+          <div style={{color:'#d4a43a',fontSize:'1.4rem',lineHeight:1}}>▼</div>
           <div style={{height:'2px',width:'40px',background:'linear-gradient(90deg,#a855f7,transparent)'}}/>
         </div>
       );
 
       /* ── PHASE 1: 신청 & 준비 ── */
       const PHASE1=[
-        {ico:'📋',num:'01',t:'수강 신청',c:'#f97316',
+        {ico:'📋',num:'01',t:'수강 신청',c:'#d4a43a',
           d:'아래 수강신청 버튼을 클릭하여 신청서를 작성합니다.',
           tag:'신청'},
-        {ico:'💳',num:'02',t:'입금 확인',c:'#fb923c',
+        {ico:'💳',num:'02',t:'입금 확인',c:'#e8950e',
           d:'신청 후 강사가 직접 입금 안내 연락을 드립니다. 입금 완료 시 등록이 확정됩니다.',
           tag:'결제'},
-        {ico:'💬',num:'03',t:'메일 & 카카오톡 소통',c:'#60a5fa',
+        {ico:'💬',num:'03',t:'메일 & 카카오톡 소통',c:'#6c3eb6',
           d:'이메일과 카카오 오픈채팅으로 교육 일정, 사전 준비사항, ZOOM 링크를 안내해 드립니다.',
           tag:'소통'},
       ];
@@ -893,44 +903,44 @@
       const WEEKS=[
         {w:'1주차',ico:'🌱',tag:'기초 세팅',
           items:['AI 블로그 자동화 개념 이해','개발 환경 & API KEY 설정','Blog Master 설치 및 초기 설정'],
-          c:'#f97316'},
+          c:'#d4a43a'},
         {w:'2주차',ico:'⚙️',tag:'자동화 구축',
           items:['LLM 연동 자동 포스팅 실습','SEO 키워드 전략 & 제목 최적화','AI 이미지 자동 생성 세팅'],
-          c:'#fb923c'},
+          c:'#e8950e'},
         {w:'3주차',ico:'🚀',tag:'플랫폼 확장',
           items:['구글·네이버·티스토리 멀티 배포','유튜브 쇼츠 자동 변환 실습','인스타·틱톡 자동 업로드 연동'],
-          c:'#60a5fa'},
+          c:'#6c3eb6'},
         {w:'4주차',ico:'💰',tag:'수익화 완성',
           items:['구글 애드센스 승인 전략','수익 극대화 광고 배치 최적화','자동 운영 스케줄 최종 세팅'],
-          c:'#f97316'},
+          c:'#d4a43a'},
       ];
 
       /* ── PHASE 3: 마무리 & 사후관리 ── */
       const PHASE3=[
-        {ico:'🏁',num:'09',t:'교육 마무리',c:'#f97316',
+        {ico:'🏁',num:'09',t:'교육 마무리',c:'#d4a43a',
           d:'4주 전 과정을 복습하며 자신만의 자동화 수익 구조를 최종 점검합니다.',
           tag:'완료'},
-        {ico:'🏅',num:'10',t:'수료증 발급',c:'#fb923c',
+        {ico:'🏅',num:'10',t:'수료증 발급',c:'#e8950e',
           d:'한국자아실현협회 명의의 공식 수료증을 발급해 드립니다.',
           tag:'수료증'},
-        {ico:'📊',num:'11',t:'향후 진단 & 관리',c:'#60a5fa',
+        {ico:'📊',num:'11',t:'향후 진단 & 관리',c:'#6c3eb6',
           d:'수료 후에도 카카오 오픈채팅을 통해 1:1 진단, AI 트렌드 업데이트, 커뮤니티 성장을 지원합니다.',
           tag:'사후관리'},
       ];
 
       const StepCard=({s,delay=0})=>(
         <TCard cls="" style={{flex:1,minWidth:'220px'}}>
-          <div style={{background:'#2a1a60',border:`1.5px solid ${s.c}55`,borderTop:`4px solid ${s.c}`,borderRadius:'16px',padding:'22px 20px',height:'100%',boxShadow:`0 4px 28px rgba(0,0,0,.35), 0 0 20px ${s.c}18`}}>
+          <div style={{background:'#ffffff',border:`1.5px solid ${s.c}55`,borderTop:`4px solid ${s.c}`,borderRadius:'16px',padding:'22px 20px',height:'100%',boxShadow:`0 4px 16px rgba(108,62,182,.1), 0 0 12px ${s.c}18`}}>
             <div style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'14px'}}>
               <div style={{width:'48px',height:'48px',borderRadius:'50%',background:`${s.c}25`,border:`2px solid ${s.c}88`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.5rem',flexShrink:0,boxShadow:`0 0 14px ${s.c}33`}}>
                 {s.ico}
               </div>
               <div>
                 <div style={{fontSize:'.72rem',color:s.c,fontWeight:800,letterSpacing:'1.5px',textTransform:'uppercase',marginBottom:'2px'}}>{s.tag}</div>
-                <div style={{fontSize:'1.05rem',fontWeight:900,color:'#ffffff'}}>{s.t}</div>
+                <div style={{fontSize:'1.05rem',fontWeight:900,color:'#3b1f6e'}}>{s.t}</div>
               </div>
             </div>
-            <div style={{fontSize:'.9rem',color:'#ffffff',lineHeight:1.75,fontWeight:500}}>{s.d}</div>
+            <div style={{fontSize:'.9rem',color:'#6b7280',lineHeight:1.75,fontWeight:500}}>{s.d}</div>
             <div style={{marginTop:'12px',display:'flex',alignItems:'center',gap:'8px'}}>
               <div style={{background:`${s.c}30`,border:`1.5px solid ${s.c}66`,borderRadius:'99px',padding:'2px 10px',fontSize:'.72rem',color:s.c,fontWeight:900}}>STEP {s.num}</div>
               <div style={{height:'1px',flex:1,background:`linear-gradient(90deg,${s.c}55,transparent)`}}/>
@@ -939,14 +949,14 @@
         </TCard>
       );
 
-      return(<section id="process" style={{padding:'80px 24px',background:'linear-gradient(180deg,#1e0f3e 0%,#130828 100%)'}}>
+      return(<section id="process" style={{padding:'80px 24px',background:'#ffffff'}}>
         <div style={{maxWidth:'1100px',margin:'0 auto'}}>
 
           {/* 섹션 헤더 */}
           <div style={{textAlign:'center',marginBottom:'56px'}}>
             <div className="rbl" style={{width:'60px',margin:'0 auto 16px'}}></div>
-            <div style={{color:'#60a5fa',fontWeight:700,fontSize:'1rem',marginBottom:'10px',letterSpacing:'3px',textTransform:'uppercase'}}>✦ 진행 방식 ✦</div>
-            <h2 className="serif" style={{fontSize:'clamp(1.5rem,3.2vw,2.4rem)',fontWeight:900,color:'#ffffff',textShadow:'0 2px 12px rgba(0,0,0,.6)'}}>
+            <div style={{color:'#6c3eb6',fontWeight:700,fontSize:'1rem',marginBottom:'10px',letterSpacing:'3px',textTransform:'uppercase'}}>✦ 진행 방식 ✦</div>
+            <h2 className="serif" style={{fontSize:'clamp(1.5rem,3.2vw,2.4rem)',fontWeight:900,color:'#3b1f6e'}}>
               "혼자 걷게 두지 않습니다.<br/>
               <span className="gt-warm">끝까지 곁에서 함께 걷겠습니다."</span>
             </h2>
@@ -955,7 +965,7 @@
               {[{ico:'🕢',t:'저녁 7:30~9:30'},{ico:'💻',t:'ZOOM 온라인'},{ico:'🗓️',t:'2026년 5월 1기'},{ico:'🆓',t:'무료 강의'}].map((b,i)=>(
                 <div key={i} style={{background:'rgba(139,92,246,.18)',border:'1.5px solid rgba(139,92,246,.5)',borderRadius:'99px',padding:'8px 20px',display:'flex',alignItems:'center',gap:'7px',boxShadow:'0 2px 12px rgba(139,92,246,.15)'}}>
                   <span style={{fontSize:'1.05rem'}}>{b.ico}</span>
-                  <span style={{color:'#ffffff',fontSize:'.9rem',fontWeight:800,textShadow:'0 1px 4px rgba(0,0,0,.4)'}}>{b.t}</span>
+                  <span style={{color:'#3b1f6e',fontSize:'.9rem',fontWeight:800,textShadow:'none'}}>{b.t}</span>
                 </div>
               ))}
             </div>
@@ -968,7 +978,7 @@
                 PHASE 1
               </div>
               <div style={{height:'2px',flex:1,background:'linear-gradient(90deg,#a855f755,transparent)'}}/>
-              <span style={{color:'#f97316',fontWeight:800,fontSize:'1rem'}}>📌 신청 & 준비</span>
+              <span style={{color:'#d4a43a',fontWeight:800,fontSize:'1rem'}}>📌 신청 & 준비</span>
             </div>
             <div style={{display:'flex',flexWrap:'wrap',gap:'14px'}}>
               {PHASE1.map((s,i)=><StepCard key={i} s={s} delay={i*70}/>)}
@@ -984,28 +994,28 @@
                 PHASE 2
               </div>
               <div style={{height:'2px',flex:1,background:'linear-gradient(90deg,#a855f755,transparent)'}}/>
-              <span style={{color:'#f97316',fontWeight:800,fontSize:'1rem'}}>🎓 4주 교육 과정</span>
+              <span style={{color:'#d4a43a',fontWeight:800,fontSize:'1rem'}}>🎓 4주 교육 과정</span>
             </div>
             {/* 교육 일정 관리 안내 */}
-            <div style={{background:'rgba(168,85,247,.14)',border:'1.5px solid rgba(139,92,246,.45)',borderRadius:'14px',padding:'14px 20px',marginBottom:'14px',display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
+            <div style={{background:'rgba(139,92,246,.14)',border:'1.5px solid rgba(139,92,246,.45)',borderRadius:'14px',padding:'14px 20px',marginBottom:'14px',display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
               <span style={{fontSize:'1.4rem'}}>📅</span>
               <div>
-                <span style={{color:'#f97316',fontWeight:800,fontSize:'.95rem'}}>교육 일정 관리 </span>
-                <span style={{color:'#ffffff',fontSize:'.9rem'}}>— ZOOM 온라인 · 저녁 7:30~9:30 (2시간) · 매주 일정 협의 후 확정</span>
+                <span style={{color:'#d4a43a',fontWeight:800,fontSize:'.95rem'}}>교육 일정 관리 </span>
+                <span style={{color:'#6b7280',fontSize:'.9rem'}}>— ZOOM 온라인 · 저녁 7:30~9:30 (2시간) · 매주 일정 협의 후 확정</span>
               </div>
             </div>
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'14px'}}>
               {WEEKS.map((w,i)=>(
                 <TCard key={i} cls="">
 
-                  <div style={{background:'#2a1a60',border:`1.5px solid ${w.c}55`,borderTop:`4px solid ${w.c}`,borderRadius:'16px',padding:'22px 18px',height:'100%',boxShadow:`0 4px 24px rgba(0,0,0,.3)`}}>
+                  <div style={{background:'#ffffff',border:`1.5px solid ${w.c}55`,borderTop:`4px solid ${w.c}`,borderRadius:'16px',padding:'22px 18px',height:'100%',boxShadow:`0 4px 24px rgba(0,0,0,.3)`}}>
                     <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'14px'}}>
                       <div style={{width:'40px',height:'40px',borderRadius:'10px',background:`${w.c}18`,border:`1.5px solid ${w.c}44`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.3rem',flexShrink:0}}>
                         {w.ico}
                       </div>
                       <div>
                         <div style={{fontSize:'.7rem',color:w.c,fontWeight:800,letterSpacing:'1px'}}>{w.tag}</div>
-                        <div style={{fontSize:'1.05rem',fontWeight:900,color:'#ffffff'}}>{w.w}</div>
+                        <div style={{fontSize:'1.05rem',fontWeight:900,color:'#3b1f6e'}}>{w.w}</div>
                       </div>
                       <div style={{marginLeft:'auto',background:`${w.c}15`,border:`1px solid ${w.c}33`,borderRadius:'8px',padding:'3px 10px',fontSize:'.72rem',fontWeight:700,color:w.c,whiteSpace:'nowrap'}}>
                         날짜 TBD
@@ -1015,7 +1025,7 @@
                       {w.items.map((item,j)=>(
                         <div key={j} style={{display:'flex',alignItems:'flex-start',gap:'8px',padding:'6px 8px',background:`${w.c}08`,borderRadius:'8px',border:`1px solid ${w.c}18`}}>
                           <span style={{color:w.c,fontWeight:900,fontSize:'.75rem',marginTop:'1px',flexShrink:0}}>✔</span>
-                          <span style={{color:'#ffffff',fontSize:'.88rem',lineHeight:1.5,fontWeight:500}}>{item}</span>
+                          <span style={{color:'#6b7280',fontSize:'.88rem',lineHeight:1.5,fontWeight:500}}>{item}</span>
                         </div>
                       ))}
                     </div>
@@ -1034,7 +1044,7 @@
                 PHASE 3
               </div>
               <div style={{height:'2px',flex:1,background:'linear-gradient(90deg,#a855f755,transparent)'}}/>
-              <span style={{color:'#f97316',fontWeight:800,fontSize:'1rem'}}>🏅 마무리 & 사후관리</span>
+              <span style={{color:'#d4a43a',fontWeight:800,fontSize:'1rem'}}>🏅 마무리 & 사후관리</span>
             </div>
             <div style={{display:'flex',flexWrap:'wrap',gap:'14px'}}>
               {PHASE3.map((s,i)=><StepCard key={i} s={s} delay={500+i*70}/>)}
@@ -1043,18 +1053,18 @@
 
           {/* 하단 감성 배너 */}
           <TCard cls="fi" style={{transitionDelay:'700ms'}}>
-            <div style={{background:'linear-gradient(135deg,rgba(109,40,217,.25),rgba(249,115,22,.15))',border:'1px solid rgba(168,85,247,.3)',borderRadius:'22px',padding:'30px 36px',textAlign:'center'}}>
+            <div style={{background:'linear-gradient(135deg,rgba(108,62,182,.08),rgba(212,164,58,.05))',border:'1px solid rgba(139,92,246,.3)',borderRadius:'22px',padding:'30px 36px',textAlign:'center'}}>
               <div style={{fontSize:'2rem',marginBottom:'10px'}}>🏆</div>
-              <p className="serif" style={{fontSize:'clamp(1rem,2.2vw,1.25rem)',fontWeight:700,lineHeight:1.8,color:'#ffffff',marginBottom:'14px'}}>
+              <p className="serif" style={{fontSize:'clamp(1rem,2.2vw,1.25rem)',fontWeight:700,lineHeight:1.8,color:'#3b1f6e',marginBottom:'14px'}}>
                 "4주 후, 당신의 블로그는<br/>
                 <span className="gt">잠자는 동안에도 돈을 벌고 있을 것입니다."</span>
               </p>
-              <p style={{color:'rgba(196,132,252,.9)',fontSize:'.9rem',lineHeight:1.65,marginBottom:'20px'}}>
+              <p style={{color:'#8b5cf6',fontSize:'.9rem',lineHeight:1.65,marginBottom:'20px'}}>
                 📋 전 과정 1:1 밀착 지도 &nbsp;·&nbsp; 💬 카카오톡 실시간 질문 지원 &nbsp;·&nbsp; 🔄 평생 업데이트 제공
               </p>
               <div style={{display:'flex',flexWrap:'wrap',justifyContent:'center',gap:'10px'}}>
                 {['📋 수강신청','💳 입금확인','📅 일정안내','🎓 4주교육','🏅 수료증','📊 사후관리'].map((t,i)=>(
-                  <div key={i} style={{background:'rgba(249,115,22,.1)',border:'1px solid rgba(249,115,22,.25)',borderRadius:'99px',padding:'5px 14px',fontSize:'.8rem',fontWeight:700,color:'#f97316'}}>
+                  <div key={i} style={{background:'rgba(212,164,58,.1)',border:'1px solid rgba(212,164,58,.25)',borderRadius:'99px',padding:'5px 14px',fontSize:'.8rem',fontWeight:700,color:'#d4a43a'}}>
                     {t}
                   </div>
                 ))}
@@ -1074,31 +1084,31 @@
       const naver=(cfg?.contact?.naver_blog)||CFG.contact.naver_blog;
       const email=(cfg?.contact?.email)||CFG.contact.email;
       const phone=(cfg?.contact?.phone||cfg?.company?.phone)||CFG.contact.phone;
-      return(<section id="contact" style={{padding:'80px 24px',background:'linear-gradient(180deg,#130828 0%,#1a0840 100%)'}}>
+      return(<section id="contact" style={{padding:'80px 24px',background:'#f7f5ff'}}>
         <div style={{maxWidth:'1100px',margin:'0 auto'}}>
 
           {/* 섹션 제목 */}
           <div className="fi" style={{textAlign:'center',marginBottom:'52px'}}>
             <div className="rbl" style={{width:'60px',margin:'0 auto 16px'}}></div>
-            <div style={{color:'#93c5fd',fontWeight:700,fontSize:'1rem',marginBottom:'10px',letterSpacing:'3px',textTransform:'uppercase'}}>✦ 문의 & 신청 ✦</div>
-            <h2 className="serif" style={{fontSize:'clamp(1.5rem,3.2vw,2.4rem)',fontWeight:900,color:'#ffffff',marginBottom:'16px'}}>
+            <div style={{color:'#8b5cf6',fontWeight:700,fontSize:'1rem',marginBottom:'10px',letterSpacing:'3px',textTransform:'uppercase'}}>✦ 문의 & 신청 ✦</div>
+            <h2 className="serif" style={{fontSize:'clamp(1.5rem,3.2vw,2.4rem)',fontWeight:900,color:'#3b1f6e',marginBottom:'16px'}}>
               <span className="gt">"오늘의 망설임이</span><br/>
-              <span style={{color:'#ffffff'}}> 미래의 기회를 늦출 뿐입니다."</span>
+              <span style={{color:'#3b1f6e'}}> 미래의 기회를 늦출 뿐입니다."</span>
             </h2>
-            <p style={{color:'#ffffff',fontSize:'1.05rem',lineHeight:1.7,maxWidth:'600px',margin:'0 auto'}}>
+            <p style={{color:'#6b7280',fontSize:'1.05rem',lineHeight:1.7,maxWidth:'600px',margin:'0 auto'}}>
               궁금한 점이 있으시면 아래 연락처로 편하게 문의해 주세요.<br/>언제든 따뜻하게 답변해 드립니다. 🙏
             </p>
           </div>
 
           {/* 감성 카피 */}
           <TCard cls="fi" style={{marginBottom:'40px'}}>
-            <div style={{background:'linear-gradient(135deg,rgba(109,40,217,.2),rgba(249,115,22,.12))',border:'1px solid rgba(251,146,60,.3)',borderRadius:'24px',padding:'32px 36px'}}>
-              <p className="serif" style={{fontSize:'clamp(1rem,1.8vw,1.12rem)',color:'#e8e4ff',lineHeight:1.95}}>
+            <div style={{background:'linear-gradient(135deg,rgba(108,62,182,.06),rgba(212,164,58,.04))',border:'1px solid rgba(212,164,58,.3)',borderRadius:'24px',padding:'32px 36px'}}>
+              <p className="serif" style={{fontSize:'clamp(1rem,1.8vw,1.12rem)',color:'#6b7280',lineHeight:1.95}}>
                 지금 이 글을 읽으며 가슴이 뛰신다면, 그것은 당신 안의 열정이 아직 살아있다는 증거입니다.<br/><br/>
                 수강료는 단순히 기술을 사는 비용이 아닙니다.&nbsp;
-                <strong style={{color:'#fb923c'}}>앞으로 펼쳐질 당신의 당당한 30년을 위한 가장 가치 있는 투자</strong>입니다.<br/><br/>
+                <strong style={{color:'#e8950e'}}>앞으로 펼쳐질 당신의 당당한 30년을 위한 가장 가치 있는 투자</strong>입니다.<br/><br/>
                 자식들에게 짐이 되지 않는 삶, 내 이름 석 자로 세상과 소통하는 삶.<br/>
-                그 시작을 저 <strong style={{color:'#60a5fa'}}>'박형종 대표'</strong>와 함께하시겠습니까?
+                그 시작을 저 <strong style={{color:'#6c3eb6'}}>'박형종 대표'</strong>와 함께하시겠습니까?
               </p>
             </div>
           </TCard>
@@ -1109,7 +1119,7 @@
             {/* 이런 분들은 꼭 들으셔야 합니다 */}
             <TCard cls="fi">
               <div style={{background:'rgba(0,80,180,.12)',border:'1px solid rgba(139,92,246,.3)',borderRadius:'20px',padding:'24px'}}>
-                <div style={{color:'#f97316',fontWeight:800,fontSize:'1.05rem',marginBottom:'16px'}}>🎯 이런 분들은 꼭 들으셔야 합니다</div>
+                <div style={{color:'#d4a43a',fontWeight:800,fontSize:'1.05rem',marginBottom:'16px'}}>🎯 이런 분들은 꼭 들으셔야 합니다</div>
                 {[
                   {ico:'📉',t:'블로그 해도 수익이 안 나는 분'},
                   {ico:'⚠️',t:'자동화 프로그램에 의존했다가 막힌 분'},
@@ -1119,46 +1129,46 @@
                 ].map((r,i)=>(
                   <div key={i} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 0',borderBottom:'1px solid rgba(139,92,246,.1)'}}>
                     <span style={{fontSize:'1.2rem',flexShrink:0}}>{r.ico}</span>
-                    <span style={{color:'#ffffff',fontWeight:600,fontSize:'.95rem'}}>{r.t}</span>
+                    <span style={{color:'#6b7280',fontWeight:600,fontSize:'.95rem'}}>{r.t}</span>
                   </div>
                 ))}
-                <div style={{marginTop:'14px',background:'rgba(249,115,22,.1)',border:'1px solid rgba(249,115,22,.25)',borderRadius:'12px',padding:'12px 16px',color:'#ffffff',fontWeight:700,fontSize:'.95rem',lineHeight:1.6}}>
-                  👉 <span style={{color:'#f97316'}}>당신의 이야기가 여기 있다면,</span><br/>이 강의는 당신을 위한 것입니다.
+                <div style={{marginTop:'14px',background:'rgba(212,164,58,.1)',border:'1px solid rgba(212,164,58,.25)',borderRadius:'12px',padding:'12px 16px',color:'#3b1f6e',fontWeight:700,fontSize:'.95rem',lineHeight:1.6}}>
+                  👉 <span style={{color:'#d4a43a'}}>당신의 이야기가 여기 있다면,</span><br/>이 강의는 당신을 위한 것입니다.
                 </div>
               </div>
             </TCard>
 
             {/* ZOOM 강의 일정 */}
             <TCard cls="fi" style={{transitionDelay:'80ms'}}>
-              <div style={{background:'linear-gradient(135deg,rgba(109,40,217,.18),rgba(249,115,22,.1))',border:'1px solid rgba(249,115,22,.4)',borderRadius:'20px',padding:'24px'}}>
-                <div style={{color:'#93c5fd',fontWeight:800,fontSize:'1.05rem',marginBottom:'16px'}}>📅 무료 강의 일정</div>
-                <div style={{background:'rgba(0,0,0,.25)',borderRadius:'14px',padding:'18px 20px',marginBottom:'14px',border:'1px solid rgba(139,92,246,.2)'}}>
+              <div style={{background:'linear-gradient(135deg,rgba(108,62,182,.18),rgba(212,164,58,.1))',border:'1px solid rgba(212,164,58,.4)',borderRadius:'20px',padding:'24px'}}>
+                <div style={{color:'#3b1f6e',fontWeight:800,fontSize:'1.05rem',marginBottom:'16px'}}>📅 무료 강의 일정</div>
+                <div style={{background:'rgba(255,255,255,.75)',borderRadius:'14px',padding:'18px 20px',marginBottom:'14px',border:'1px solid rgba(108,62,182,.18)'}}>
                   <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'12px'}}>
                     <span style={{fontSize:'1.6rem'}}>🕢</span>
                     <div>
-                      <div style={{color:'#ffffff',fontWeight:900,fontSize:'1.1rem'}}>저녁 7:30 ~ 9:30</div>
-                      <div style={{color:'#f97316',fontSize:'.85rem',fontWeight:600}}>2시간 집중 강의</div>
+                      <div style={{color:'#3b1f6e',fontWeight:900,fontSize:'1.1rem'}}>저녁 7:30 ~ 9:30</div>
+                      <div style={{color:'#d4a43a',fontSize:'.85rem',fontWeight:600}}>2시간 집중 강의</div>
                     </div>
                   </div>
                   <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'12px'}}>
                     <span style={{fontSize:'1.6rem'}}>💻</span>
                     <div>
-                      <div style={{color:'#ffffff',fontWeight:900,fontSize:'1rem'}}>ZOOM 온라인 진행</div>
-                      <div style={{color:'#f97316',fontSize:'.85rem',fontWeight:600}}>전국 어디서나 참여 가능</div>
+                      <div style={{color:'#3b1f6e',fontWeight:900,fontSize:'1rem'}}>ZOOM 온라인 진행</div>
+                      <div style={{color:'#d4a43a',fontSize:'.85rem',fontWeight:600}}>전국 어디서나 참여 가능</div>
                     </div>
                   </div>
                   <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
                     <span style={{fontSize:'1.6rem'}}>🗓️</span>
                     <div>
-                      <div style={{color:'#ffffff',fontWeight:900,fontSize:'1rem'}}>2026년 5월 1기</div>
-                      <div style={{color:'#fb923c',fontSize:'.85rem',fontWeight:700}}>⏳ 현재 준비 중 · 선착순 모집</div>
+                      <div style={{color:'#3b1f6e',fontWeight:900,fontSize:'1rem'}}>2026년 5월 1기</div>
+                      <div style={{color:'#e8950e',fontSize:'.85rem',fontWeight:700}}>⏳ 현재 준비 중 · 선착순 모집</div>
                     </div>
                   </div>
                 </div>
-                <div style={{background:'rgba(249,115,22,.12)',border:'1px solid rgba(249,115,22,.3)',borderRadius:'12px',padding:'12px 16px',marginBottom:'16px'}}>
-                  <p style={{color:'#ffffff',fontWeight:700,fontSize:'.9rem',lineHeight:1.65}}>
-                    🎁 <span style={{color:'#f97316'}}>무료 강의 참여 특전</span><br/>
-                    <span style={{color:'#ffffff',fontWeight:500}}>→ AI 수익화 전자책 PDF 무료 증정<br/>→ 카카오 오픈채팅 1:1 질문 지원</span>
+                <div style={{background:'rgba(212,164,58,.12)',border:'1px solid rgba(212,164,58,.3)',borderRadius:'12px',padding:'12px 16px',marginBottom:'16px'}}>
+                  <p style={{color:'#3b1f6e',fontWeight:700,fontSize:'.9rem',lineHeight:1.65}}>
+                    🎁 <span style={{color:'#d4a43a'}}>무료 강의 참여 특전</span><br/>
+                    <span style={{color:'#6b7280',fontWeight:500}}>→ AI 수익화 전자책 PDF 무료 증정<br/>→ 카카오 오픈채팅 1:1 질문 지원</span>
                   </p>
                 </div>
                 <button onClick={onEnroll} className="bwarm" style={{width:'100%',padding:'14px',border:'none',fontSize:'1.05rem',borderRadius:'13px',cursor:'pointer',fontWeight:900}}>
@@ -1173,22 +1183,22 @@
 
             {/* 왼쪽: 직접 문의 연락처 */}
             <div className="fi" style={{display:'flex',flexDirection:'column',gap:'14px'}}>
-              <div style={{background:'#1c1050',border:'1px solid rgba(139,92,246,.25)',borderRadius:'20px',padding:'24px'}}>
-                <div style={{color:'#c084fc',fontWeight:800,fontSize:'1rem',marginBottom:'18px',letterSpacing:'1px'}}>📞 직접 연락처</div>
+              <div style={{background:'#ffffff',border:'1px solid rgba(139,92,246,.25)',borderRadius:'20px',padding:'24px'}}>
+                <div style={{color:'#8b5cf6',fontWeight:800,fontSize:'1rem',marginBottom:'18px',letterSpacing:'1px'}}>📞 직접 연락처</div>
                 {[
-                  {ico:'📱',label:'전화 / 문자',val:phone,c:'#c084fc',link:`tel:${phone}`},
-                  {ico:'📧',label:'이메일 문의',val:email,c:'#f97316',link:`mailto:${email}`},
-                  {ico:'📍',label:'오시는 길',val:'경남 김해시 주촌면 선지로85\n센텀큐시티아파트상가 101호',c:'#fb923c',link:null},
-                  {ico:'🏢',label:'기관명',val:'한국자아실현협회 · 센텀Q AI 연구소',c:'#f97316',link:null},
-                  {ico:'👤',label:'담당자',val:'박형종 대표',c:'#93c5fd',link:null},
+                  {ico:'📱',label:'전화 / 문자',val:phone,c:'#8b5cf6',link:`tel:${phone}`},
+                  {ico:'📧',label:'이메일 문의',val:email,c:'#d4a43a',link:`mailto:${email}`},
+                  {ico:'📍',label:'오시는 길',val:'경남 김해시 주촌면 선지로85\n센텀큐시티아파트상가 101호',c:'#e8950e',link:null},
+                  {ico:'🏢',label:'기관명',val:'한국자아실현협회 · 센텀Q AI 연구소',c:'#d4a43a',link:null},
+                  {ico:'👤',label:'담당자',val:'박형종 대표',c:'#ede9fe',link:null},
                 ].map((r,i)=>(
-                  <div key={i} style={{display:'flex',alignItems:'flex-start',gap:'12px',padding:'11px 0',borderBottom:'1px solid rgba(255,255,255,.07)'}}>
+                  <div key={i} style={{display:'flex',alignItems:'flex-start',gap:'12px',padding:'11px 0',borderBottom:'1px solid rgba(108,62,182,.07)'}}>
                     <span style={{fontSize:'1.3rem',flexShrink:0,marginTop:'1px'}}>{r.ico}</span>
                     <div style={{flex:1}}>
                       <div style={{fontSize:'.72rem',color:`${r.c}bb`,fontWeight:700,letterSpacing:'1px',textTransform:'uppercase',marginBottom:'3px'}}>{r.label}</div>
                       {r.link
-                        ? <a href={r.link} style={{color:'#ffffff',fontWeight:700,fontSize:'.95rem',textDecoration:'none',borderBottom:`1px solid ${r.c}55`}}>{r.val}</a>
-                        : <div style={{color:'#ffffff',fontWeight:600,fontSize:'.92rem',whiteSpace:'pre-line',lineHeight:1.5}}>{r.val}</div>
+                        ? <a href={r.link} style={{color:'#3b1f6e',fontWeight:700,fontSize:'.95rem',textDecoration:'none',borderBottom:`1px solid ${r.c}55`}}>{r.val}</a>
+                        : <div style={{color:'#6b7280',fontWeight:600,fontSize:'.92rem',whiteSpace:'pre-line',lineHeight:1.5}}>{r.val}</div>
                       }
                     </div>
                   </div>
@@ -1196,16 +1206,16 @@
               </div>
 
               {/* 운영 시간 */}
-              <div style={{background:'#1c1050',border:'1px solid rgba(168,85,247,.22)',borderRadius:'16px',padding:'18px 22px'}}>
-                <div style={{color:'#93c5fd',fontWeight:800,fontSize:'.95rem',marginBottom:'12px'}}>⏰ 상담 가능 시간</div>
+              <div style={{background:'#ffffff',border:'1px solid rgba(139,92,246,.22)',borderRadius:'16px',padding:'18px 22px'}}>
+                <div style={{color:'#8b5cf6',fontWeight:800,fontSize:'.95rem',marginBottom:'12px'}}>⏰ 상담 가능 시간</div>
                 {[
                   {d:'평일 (월~금)',t:'오전 9:00 ~ 오후 6:00'},
                   {d:'토요일',t:'오전 10:00 ~ 오후 3:00'},
                   {d:'일요일 · 공휴일',t:'카카오 오픈채팅 문의'},
                 ].map((r,i)=>(
-                  <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'7px 0',borderBottom:'1px solid rgba(255,255,255,.05)',fontSize:'.88rem'}}>
-                    <span style={{color:'#ffffff',fontWeight:600}}>{r.d}</span>
-                    <span style={{color:'#ffffff',fontWeight:700}}>{r.t}</span>
+                  <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'7px 0',borderBottom:'1px solid rgba(108,62,182,.05)',fontSize:'.88rem'}}>
+                    <span style={{color:'#3b1f6e',fontWeight:600}}>{r.d}</span>
+                    <span style={{color:'#3b1f6e',fontWeight:700}}>{r.t}</span>
                   </div>
                 ))}
               </div>
@@ -1214,13 +1224,13 @@
             {/* 오른쪽: CTA 버튼들 */}
             <div className="fi" style={{display:'flex',flexDirection:'column',gap:'16px',transitionDelay:'80ms'}}>
               {/* 수강신청 CTA */}
-              <TCard cls="np" style={{borderRadius:'20px',overflow:'hidden',border:'1px solid rgba(249,115,22,.4)'}}>
-                <div style={{background:'linear-gradient(135deg,rgba(109,40,217,.2),rgba(249,115,22,.1))',padding:'28px 26px',textAlign:'center'}}>
+              <TCard cls="np" style={{borderRadius:'20px',overflow:'hidden',border:'1px solid rgba(212,164,58,.4)'}}>
+                <div style={{background:'linear-gradient(135deg,rgba(108,62,182,.2),rgba(212,164,58,.1))',padding:'28px 26px',textAlign:'center'}}>
                   <div style={{fontSize:'2.8rem',marginBottom:'10px'}}>🚀</div>
-                  <h3 style={{fontSize:'1.25rem',fontWeight:900,color:'#f97316',marginBottom:'8px',textShadow:'0 0 14px rgba(249,115,22,.5)'}}>지금 바로 수강 신청</h3>
-                  <p style={{color:'#ffffff',lineHeight:1.65,fontSize:'.95rem',marginBottom:'18px'}}>
+                  <h3 style={{fontSize:'1.25rem',fontWeight:900,color:'#d4a43a',marginBottom:'8px',textShadow:'0 0 14px rgba(212,164,58,.5)'}}>지금 바로 수강 신청</h3>
+                  <p style={{color:'#6b7280',lineHeight:1.65,fontSize:'.95rem',marginBottom:'18px'}}>
                     선착순 한정 인원 · 1:1 맞춤 코칭 보장<br/>
-                    <span style={{color:'#fb923c',fontWeight:700}}>2026년 5월 1기 모집 중!</span>
+                    <span style={{color:'#e8950e',fontWeight:700}}>2026년 5월 1기 모집 중!</span>
                   </p>
                   <button onClick={onEnroll} className="bwarm" style={{width:'100%',padding:'15px',border:'none',fontSize:'1.05rem',borderRadius:'13px',cursor:'pointer',fontWeight:900}}>
                     📋 수강 신청서 작성하기
@@ -1229,13 +1239,13 @@
               </TCard>
 
               {/* 카카오 문의 */}
-              <TCard cls="ny" style={{borderRadius:'20px',overflow:'hidden',border:'1px solid rgba(168,85,247,.35)'}}>
-                <div style={{background:'rgba(168,85,247,.08)',padding:'22px 26px',textAlign:'center'}}>
+              <TCard cls="ny" style={{borderRadius:'20px',overflow:'hidden',border:'1px solid rgba(139,92,246,.35)'}}>
+                <div style={{background:'rgba(139,92,246,.08)',padding:'22px 26px',textAlign:'center'}}>
                   <div style={{fontSize:'2.4rem',marginBottom:'8px'}}>💬</div>
-                  <h3 style={{fontSize:'1.15rem',fontWeight:900,color:'#93c5fd',marginBottom:'7px'}}>카카오 오픈채팅 문의</h3>
-                  <p style={{color:'#ffffff',fontSize:'.9rem',lineHeight:1.6,marginBottom:'14px'}}>망설여진다면 편하게 말 걸어주세요.<br/>따뜻하게 답변해 드립니다.</p>
+                  <h3 style={{fontSize:'1.15rem',fontWeight:900,color:'#3b1f6e',marginBottom:'7px'}}>카카오 오픈채팅 문의</h3>
+                  <p style={{color:'#6b7280',fontSize:'.9rem',lineHeight:1.6,marginBottom:'14px'}}>망설여진다면 편하게 말 걸어주세요.<br/>따뜻하게 답변해 드립니다.</p>
                   <a href={kakao} target="_blank" rel="noopener noreferrer"
-                    style={{display:'block',padding:'13px',background:'linear-gradient(135deg,#f97316,#fb923c)',color:'#ffffff',fontWeight:900,fontSize:'1rem',borderRadius:'13px',textDecoration:'none',boxShadow:'0 0 18px rgba(124,58,237,.5)'}}>
+                    style={{display:'block',padding:'13px',background:'linear-gradient(135deg,#f97316,#fb923c)',color:'#3b1f6e',fontWeight:900,fontSize:'1rem',borderRadius:'13px',textDecoration:'none',boxShadow:'0 0 18px rgba(108,62,182,.5)'}}>
                     💬 카카오 오픈채팅 참여하기
                   </a>
                 </div>
@@ -1246,11 +1256,11 @@
                 <div style={{background:'rgba(255,184,0,.06)',padding:'18px 22px',display:'flex',alignItems:'center',gap:'16px'}}>
                   <span style={{fontSize:'2rem',flexShrink:0}}>📝</span>
                   <div style={{flex:1}}>
-                    <div style={{color:'#a855f7',fontWeight:800,fontSize:'.95rem',marginBottom:'4px'}}>네이버 블로그 방문하기</div>
-                    <div style={{color:'#ffffff',fontSize:'.85rem'}}>강의 후기 · 최신 AI 트렌드 · 수익화 사례 확인</div>
+                    <div style={{color:'#8b5cf6',fontWeight:800,fontSize:'.95rem',marginBottom:'4px'}}>네이버 블로그 방문하기</div>
+                    <div style={{color:'#6b7280',fontSize:'.85rem'}}>강의 후기 · 최신 AI 트렌드 · 수익화 사례 확인</div>
                   </div>
                   <a href={naver} target="_blank" rel="noopener noreferrer"
-                    style={{background:'rgba(255,184,0,.18)',border:'1px solid rgba(255,184,0,.5)',color:'#a855f7',padding:'9px 16px',borderRadius:'10px',fontWeight:800,fontSize:'.88rem',textDecoration:'none',flexShrink:0,whiteSpace:'nowrap'}}>
+                    style={{background:'rgba(255,184,0,.18)',border:'1px solid rgba(255,184,0,.5)',color:'#8b5cf6',padding:'9px 16px',borderRadius:'10px',fontWeight:800,fontSize:'.88rem',textDecoration:'none',flexShrink:0,whiteSpace:'nowrap'}}>
                     방문 →
                   </a>
                 </div>
@@ -1259,16 +1269,16 @@
           </div>
 
           {/* 하단 회사정보 바 */}
-          <div className="fi pcard" style={{borderRadius:'16px',padding:'20px 28px',border:'1px solid rgba(255,255,255,.1)'}}>
+          <div className="fi pcard" style={{borderRadius:'16px',padding:'20px 28px',border:'1px solid rgba(108,62,182,.12)'}}>
             <div style={{display:'flex',flexWrap:'wrap',gap:'6px 24px',justifyContent:'center',alignItems:'center',fontSize:'.85rem'}}>
               {[
                 {l:'기관명',v:'한국자아실현협회'},{l:'대표',v:'박형종'},
                 {l:'브랜드',v:'센텀Q AI 연구소'},{l:'전화',v:phone},
                 {l:'이메일',v:email},{l:'주소',v:'경남 김해시 주촌면 선지로85 센텀큐시티아파트상가 101호'},
               ].map((c,i)=>(
-                <span key={i} style={{color:'#ffffff'}}>
-                  <span style={{color:'rgba(255,255,255,.5)',fontSize:'.75rem',marginRight:'4px'}}>{c.l}</span>
-                  <strong style={{color:'#ffffff'}}>{c.v}</strong>
+                <span key={i} style={{color:'#6b7280'}}>
+                  <span style={{color:'rgba(108,62,182,.5)',fontSize:'.75rem',marginRight:'4px'}}>{c.l}</span>
+                  <strong style={{color:'#3b1f6e'}}>{c.v}</strong>
                 </span>
               ))}
             </div>
@@ -1282,10 +1292,10 @@
     ━━━━━━━━━━━━━━━━━━━ */
     function Hashtags(){
       const TAGS=['#AI자동화','#수익형블로그','#구글애드센스','#블로그자동화','#AI블로그','#시니어창업','#1인지식창업','#디지털노마드','#네이버블로그','#워드프레스','#무한자동화','#AIBlogMaster','#센텀Q','#박형종','#한국자아실현협회'];
-      return(<div style={{padding:'32px 24px',background:'#130828',borderTop:'1px solid rgba(139,92,246,.1)'}}>
+      return(<div style={{padding:'32px 24px',background:'#f7f5ff',borderTop:'1px solid rgba(108,62,182,.12)'}}>
         <div style={{maxWidth:'1100px',margin:'0 auto',display:'flex',flexWrap:'wrap',justifyContent:'center',gap:'8px'}}>
           {TAGS.map((t,i)=>(
-            <span key={i} style={{color:['#f97316','#fb923c','#60a5fa','#a855f7','#f97316'][i%5],fontSize:'.82rem',fontWeight:700,opacity:.75}}>{t}</span>
+            <span key={i} style={{color:['#6c3eb6','#d4a43a','#3b1f6e','#8b5cf6','#e8950e'][i%5],fontSize:'.82rem',fontWeight:700,opacity:.85}}>{t}</span>
           ))}
         </div>
       </div>);
@@ -1297,16 +1307,16 @@
     function Footer({cfg}){
       const co=cfg?.company||CFG.company;
       const ct=cfg?.contact||CFG.contact;
-      return(<footer className="panel" style={{padding:'40px 24px',borderTop:'1px solid rgba(255,255,255,.09)'}}>
+      return(<footer className="panel" style={{padding:'40px 24px',borderTop:'1px solid rgba(108,62,182,.1)'}}>
         <div style={{maxWidth:'1100px',margin:'0 auto'}}>
           <div className="rbl" style={{marginBottom:'28px'}}></div>
           <div style={{display:'flex',flexWrap:'wrap',justifyContent:'space-between',gap:'24px',marginBottom:'24px'}}>
             <div>
               <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'8px'}}>
                 <span style={{fontSize:'1.6rem'}}>🤖</span>
-                <span style={{fontSize:'1.2rem',fontWeight:900}}><span className="gt">AI BLOG</span><span style={{color:'#ffffff'}}> MASTER</span></span>
+                <span style={{fontSize:'1.2rem',fontWeight:900}}><span className="gt">AI BLOG</span><span style={{color:'#3b1f6e'}}> MASTER</span></span>
               </div>
-              <div style={{color:'#ffffff',fontSize:'.85rem',lineHeight:1.75}}>
+              <div style={{color:'#6b7280',fontSize:'.85rem',lineHeight:1.75}}>
                 {co.name} | 대표 {co.rep}<br/>
                 {co.addr}<br/>
                 📞 {co.phone} &nbsp;|&nbsp; ✉️ {co.email}
@@ -1314,13 +1324,13 @@
             </div>
             <div style={{display:'flex',gap:'18px',flexWrap:'wrap',alignItems:'flex-start'}}>
               {[['#about','소개'],['#features','기능'],['#process','진행방식'],['#contact','문의']].map(([h,l])=>(
-                <a key={h} href={h} className="nlink" style={{color:'#ffffff',textDecoration:'none',fontSize:'.88rem',fontWeight:700}}>{l}</a>
+                <a key={h} href={h} className="nlink" style={{color:'#3b1f6e',textDecoration:'none',fontSize:'.88rem',fontWeight:700}}>{l}</a>
               ))}
-              <a href={ct.kakao_url} target="_blank" rel="noopener noreferrer" style={{color:'#93c5fd',textDecoration:'none',fontSize:'.88rem',fontWeight:700}}>💬 카카오</a>
-              <a href={ct.naver_blog} target="_blank" rel="noopener noreferrer" style={{color:'#a855f7',textDecoration:'none',fontSize:'.88rem',fontWeight:700}}>📝 네이버블로그</a>
+              <a href={ct.kakao_url} target="_blank" rel="noopener noreferrer" style={{color:'#8b5cf6',textDecoration:'none',fontSize:'.88rem',fontWeight:700}}>💬 카카오</a>
+              <a href={ct.naver_blog} target="_blank" rel="noopener noreferrer" style={{color:'#8b5cf6',textDecoration:'none',fontSize:'.88rem',fontWeight:700}}>📝 네이버블로그</a>
             </div>
           </div>
-          <div style={{textAlign:'center',color:'#a78bfa',fontSize:'.8rem'}}>
+          <div style={{textAlign:'center',color:'#6c3eb6',fontSize:'.8rem'}}>
             <p>© 2026 {co.name} · All Rights Reserved. | 사업자 소재지: {co.addr}</p>
           </div>
         </div>
@@ -1385,22 +1395,22 @@
           {/* 🎆 폭죽! */}
           <Fireworks/>
           <div className="mc pinner ng" style={{width:'100%',maxWidth:'460px',borderRadius:'26px',padding:'44px 32px',textAlign:'center',position:'relative',zIndex:260}}>
-            <button onClick={onClose} style={{position:'absolute',top:'15px',right:'15px',background:'rgba(255,255,255,.1)',border:'none',cursor:'pointer',color:'rgba(240,238,255,.6)',width:'30px',height:'30px',borderRadius:'50%',fontSize:'1rem'}}>✕</button>
+            <button onClick={onClose} style={{position:'absolute',top:'15px',right:'15px',background:'rgba(108,62,182,.12)',border:'none',cursor:'pointer',color:'rgba(240,238,255,.6)',width:'30px',height:'30px',borderRadius:'50%',fontSize:'1rem'}}>✕</button>
             <div style={{fontSize:'3.5rem',marginBottom:'12px',animation:'bounce 0.6s ease 3'}}>🎉</div>
-            <h2 className="serif" style={{fontSize:'1.75rem',fontWeight:900,marginBottom:'10px',color:'#ffffff'}}>
+            <h2 className="serif" style={{fontSize:'1.75rem',fontWeight:900,marginBottom:'10px',color:'#3b1f6e'}}>
               <span className="gt">축하합니다! 신청 완료! 🎊</span>
             </h2>
-            <p style={{color:'#e8e4ff',lineHeight:1.75,marginBottom:'8px',fontSize:'1.05rem'}}>
-              <strong style={{color:'#a855f7'}}>{form.name}</strong>님, 접수되었습니다! 🙏
+            <p style={{color:'#6b7280',lineHeight:1.75,marginBottom:'8px',fontSize:'1.05rem'}}>
+              <strong style={{color:'#8b5cf6'}}>{form.name}</strong>님, 접수되었습니다! 🙏
             </p>
-            <p style={{color:'#ffffff',fontSize:'.92rem',marginBottom:'6px'}}>
-              📧 <strong style={{color:'#ffffff'}}>{form.email}</strong><br/>으로 전자책 및 과정 안내 메일을 발송합니다.
+            <p style={{color:'#6b7280',fontSize:'.92rem',marginBottom:'6px'}}>
+              📧 <strong style={{color:'#3b1f6e'}}>{form.email}</strong><br/>으로 전자책 및 과정 안내 메일을 발송합니다.
             </p>
-            <p style={{color:'#c084fc',fontSize:'.86rem',marginBottom:'24px'}}>아래 버튼으로 카카오 오픈채팅방과 네이버 블로그에 참여하세요!</p>
+            <p style={{color:'#8b5cf6',fontSize:'.86rem',marginBottom:'24px'}}>아래 버튼으로 카카오 오픈채팅방과 네이버 블로그에 참여하세요!</p>
             <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
               <a href={kakao} target="_blank" rel="noopener noreferrer"
                 onClick={()=>setTimeout(()=>window.open(naver,'_blank'),500)}
-                style={{display:'block',background:'linear-gradient(135deg,#7c3aed,#a855f7)',color:'#ffffff',fontWeight:900,fontSize:'1.05rem',padding:'14px',borderRadius:'13px',textDecoration:'none',boxShadow:'0 0 18px rgba(168,85,247,.5)'}}>
+                style={{display:'block',background:'linear-gradient(135deg,#7c3aed,#a855f7)',color:'#ffffff',fontWeight:900,fontSize:'1.05rem',padding:'14px',borderRadius:'13px',textDecoration:'none',boxShadow:'0 0 18px rgba(139,92,246,.5)'}}>
                 💬 카카오 오픈채팅 + 네이버 블로그 참여
               </a>
               <button onClick={onClose} className="bwarm" style={{padding:'12px',border:'none',cursor:'pointer',fontSize:'1rem',borderRadius:'13px'}}>닫기</button>
@@ -1409,8 +1419,8 @@
         </div>
       );
 
-      const LB={display:'block',fontSize:'1rem',fontWeight:700,color:'#ffffff',marginBottom:'8px',textShadow:'0 1px 4px rgba(0,0,0,.5)'};
-      const SEC={color:'rgba(251,146,60,.7)',fontWeight:500,fontSize:'.86rem',marginLeft:'6px'};
+      const LB={display:'block',fontSize:'1rem',fontWeight:700,color:'#3b1f6e',marginBottom:'8px'};
+      const SEC={color:'rgba(108,62,182,.7)',fontWeight:500,fontSize:'.86rem',marginLeft:'6px'};
 
       return(
         <div className="mo" onClick={onClose} style={{position:'fixed',inset:0,zIndex:200,background:'rgba(0,0,0,.88)',display:'flex',alignItems:'center',justifyContent:'center',padding:'12px'}}>
@@ -1418,11 +1428,11 @@
             style={{width:'100%',maxWidth:'640px',borderRadius:'26px',maxHeight:'94vh',overflowY:'auto',position:'relative',border:'1px solid rgba(255,255,255,.14)'}}>
 
             {/* 헤더 */}
-            <div style={{padding:'24px 30px 20px',background:'linear-gradient(135deg,rgba(109,40,217,.4),rgba(251,146,60,.15))',borderBottom:'1px solid rgba(255,255,255,.1)',borderRadius:'26px 26px 0 0',position:'sticky',top:0,zIndex:10,backdropFilter:'blur(20px)'}}>
-              <h2 style={{fontSize:'1.45rem',fontWeight:900,color:'#ffffff',textShadow:'0 2px 8px rgba(0,0,0,.5)'}}>
+            <div style={{padding:'24px 30px 20px',background:'linear-gradient(135deg,rgba(108,62,182,.4),rgba(212,164,58,.15))',borderBottom:'1px solid rgba(108,62,182,.12)',borderRadius:'26px 26px 0 0',position:'sticky',top:0,zIndex:10,backdropFilter:'blur(20px)'}}>
+              <h2 style={{fontSize:'1.45rem',fontWeight:900,color:'#3b1f6e',textShadow:'0 2px 8px rgba(0,0,0,.5)'}}>
                 📋 <span className="gt">수강 신청서</span>
               </h2>
-              <p style={{color:'rgba(240,238,255,.9)',fontSize:'.86rem',marginTop:'3px'}}>
+              <p style={{color:'#6b7280',fontSize:'.86rem',marginTop:'3px'}}>
                 AI BLOG MASTER 자동화 과정 · {batch} · 선착순 마감
               </p>
             </div>
@@ -1430,15 +1440,15 @@
             <form onSubmit={handleSubmit} style={{padding:'24px 30px',display:'flex',flexDirection:'column',gap:'20px'}}>
 
               {/* 성함 */}
-              <div><label style={LB}>성함 <span style={{color:'#f97316'}}>*</span></label>
+              <div><label style={LB}>성함 <span style={{color:'#d4a43a'}}>*</span></label>
                 <input name="name" value={form.name} onChange={set} required placeholder="홍길동" className="fi2"/></div>
 
               {/* 전화번호 */}
-              <div><label style={LB}>전화번호 <span style={{color:'#f97316'}}>*</span></label>
+              <div><label style={LB}>전화번호 <span style={{color:'#d4a43a'}}>*</span></label>
                 <input name="phone" value={form.phone} onChange={set} required placeholder="010-1234-5678" type="tel" className="fi2"/></div>
 
               {/* 성별 */}
-              <div><label style={LB}>성별 <span style={{color:'#f97316'}}>*</span></label>
+              <div><label style={LB}>성별 <span style={{color:'#d4a43a'}}>*</span></label>
                 <div style={{display:'flex',gap:'12px'}}>
                   {['남','여'].map(g=>(
                     <button key={g} type="button" onClick={()=>setForm(f=>({...f,gender:g}))}
@@ -1451,12 +1461,12 @@
 
               {/* 이메일 */}
               <div>
-                <label style={LB}>이메일 주소 <span style={{color:'#f97316'}}>*</span><span style={SEC}>(전자책 발송용)</span></label>
+                <label style={LB}>이메일 주소 <span style={{color:'#d4a43a'}}>*</span><span style={SEC}>(전자책 발송용)</span></label>
                 <input name="email" value={form.email} onChange={set} required type="email" placeholder="예: insu@naver.com" className="fi2"/>
               </div>
 
               {/* 연령대 */}
-              <div><label style={LB}>연령대 <span style={{color:'#f97316'}}>*</span></label>
+              <div><label style={LB}>연령대 <span style={{color:'#d4a43a'}}>*</span></label>
                 <div style={{display:'flex',flexWrap:'wrap',gap:'9px'}}>
                   {['20대','30대','40대','50대','60대 이상'].map(a=>(
                     <button key={a} type="button" onClick={()=>setForm(f=>({...f,age:a}))}
@@ -1469,7 +1479,7 @@
 
               {/* 현재 직업 */}
               <div>
-                <label style={LB}>현재 직업은 무엇인가요? <span style={{color:'#f97316'}}>*</span></label>
+                <label style={LB}>현재 직업은 무엇인가요? <span style={{color:'#d4a43a'}}>*</span></label>
                 <select name="job" value={form.job} onChange={set} required className="fi2">
                   <option value="">— 선택해 주세요 —</option>
                   {['직장인','자영업/개인사업자','프리랜서','전업주부','은퇴자','법인사업자','기타'].map(j=>(
@@ -1484,7 +1494,7 @@
               {/* ★ 희망 플랫폼 (복수 선택) ★ */}
               <div>
                 <label style={LB}>
-                  희망 플랫폼 <span style={{color:'#f97316'}}>*</span>
+                  희망 플랫폼 <span style={{color:'#d4a43a'}}>*</span>
                   <span style={SEC}>(복수 선택 가능)</span>
                 </label>
                 <div style={{display:'flex',flexWrap:'wrap',gap:'9px'}}>
@@ -1493,7 +1503,7 @@
                       className={`selb ${plats.includes(p)?'on':''}`}>
                       <span>{PLAT_ICONS[p]}</span>
                       <span>{p}</span>
-                      {plats.includes(p)&&<span style={{marginLeft:'4px',fontSize:'.8rem',color:'#f97316'}}>✓</span>}
+                      {plats.includes(p)&&<span style={{marginLeft:'4px',fontSize:'.8rem',color:'#d4a43a'}}>✓</span>}
                     </button>
                   ))}
                 </div>
@@ -1502,16 +1512,16 @@
                     placeholder="사용하실 플랫폼을 직접 입력해 주세요" className="fi2" style={{marginTop:'10px'}}/>
                 )}
                 {plats.length>0&&(
-                  <div style={{marginTop:'10px',padding:'8px 14px',background:'rgba(249,115,22,.12)',borderRadius:'10px',
-                    border:'1px solid rgba(249,115,22,.3)',fontSize:'.85rem',color:'rgba(240,238,255,.93)'}}>
-                    ✓ 선택됨: <strong style={{color:'#60a5fa'}}>{plats.map(p=>p==='기타'&&platOther?`기타(${platOther})`:p).join(' · ')}</strong>
+                  <div style={{marginTop:'10px',padding:'8px 14px',background:'rgba(212,164,58,.12)',borderRadius:'10px',
+                    border:'1px solid rgba(212,164,58,.3)',fontSize:'.85rem',color:'#6b7280'}}>
+                    ✓ 선택됨: <strong style={{color:'#6c3eb6'}}>{plats.map(p=>p==='기타'&&platOther?`기타(${platOther})`:p).join(' · ')}</strong>
                   </div>
                 )}
               </div>
 
               {/* 에러 메시지 */}
               {err&&(
-                <div style={{background:'rgba(249,115,22,.14)',border:'1px solid rgba(249,115,22,.4)',borderRadius:'12px',padding:'12px 16px',color:'#f97316',fontSize:'.94rem',fontWeight:600}}>
+                <div style={{background:'rgba(212,164,58,.14)',border:'1px solid rgba(212,164,58,.4)',borderRadius:'12px',padding:'12px 16px',color:'#d4a43a',fontSize:'.94rem',fontWeight:600}}>
                   ⚠️ {err}
                 </div>
               )}
@@ -1519,11 +1529,11 @@
               {/* 동의 */}
               <label style={{display:'flex',alignItems:'flex-start',gap:'12px',cursor:'pointer'}}>
                 <input type="checkbox" name="agree" checked={form.agree} onChange={set}
-                  style={{marginTop:'2px',width:'18px',height:'18px',accentColor:'#f97316',cursor:'pointer',flexShrink:0}}/>
-                <span style={{color:'rgba(240,238,255,.94)',fontSize:'.94rem',lineHeight:1.65}}>
+                  style={{marginTop:'2px',width:'18px',height:'18px',accentColor:'#d4a43a',cursor:'pointer',flexShrink:0}}/>
+                <span style={{color:'#6b7280',fontSize:'.94rem',lineHeight:1.65}}>
                   수강 신청 및 전자책 발송을 위한 개인정보 수집·이용에&nbsp;
-                  <strong style={{color:'#c084fc'}}>동의합니다.</strong>
-                  <span style={{color:'#f97316'}}> *</span>
+                  <strong style={{color:'#8b5cf6'}}>동의합니다.</strong>
+                  <span style={{color:'#d4a43a'}}> *</span>
                 </span>
               </label>
 
@@ -1539,12 +1549,12 @@
                 }
               </button>
 
-              <p style={{textAlign:'center',color:'rgba(240,238,255,.82)',fontSize:'.8rem',lineHeight:1.6}}>
+              <p style={{textAlign:'center',color:'#6b7280',fontSize:'.8rem',lineHeight:1.6}}>
                 접수 후 카카오 오픈채팅방과 네이버 블로그가 자동으로 열립니다
               </p>
             </form>
 
-            <button onClick={onClose} style={{position:'absolute',top:'17px',right:'19px',background:'rgba(255,255,255,.1)',border:'none',cursor:'pointer',color:'rgba(240,238,255,.6)',width:'30px',height:'30px',borderRadius:'50%',fontSize:'1rem',display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
+            <button onClick={onClose} style={{position:'absolute',top:'17px',right:'19px',background:'rgba(108,62,182,.12)',border:'none',cursor:'pointer',color:'rgba(240,238,255,.6)',width:'30px',height:'30px',borderRadius:'50%',fontSize:'1rem',display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
           </div>
         </div>
       );
@@ -1560,8 +1570,8 @@
       useEffect(()=>{loadCfg().then(c=>{setCfg(c);setLoad(false);});},[]);
       useFade();
       if(load) return(
-        <div style={{position:'fixed',inset:0,background:'#1e0f3e',zIndex:500,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:'16px'}}>
-          <div style={{width:'50px',height:'50px',borderRadius:'50%',border:'4px solid rgba(124,58,237,.3)',borderTopColor:'#f97316',animation:'spin .9s linear infinite'}}></div>
+        <div style={{position:'fixed',inset:0,background:'#f7f5ff',zIndex:500,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:'16px'}}>
+          <div style={{width:'50px',height:'50px',borderRadius:'50%',border:'4px solid rgba(108,62,182,.2)',borderTopColor:'#6c3eb6',animation:'spin .9s linear infinite'}}></div>
           <p className="gt" style={{fontWeight:900,fontSize:'1.15rem'}}>AI BLOG MASTER 로딩 중...</p>
         </div>
       );
